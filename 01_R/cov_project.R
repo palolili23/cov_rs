@@ -320,29 +320,7 @@ smoke <- rs1_smoke %>%
 
 export(smoke, here::here("02_clean_data", "smoke.Rdata"))
 
-# Errors in smoking variable ----------------------------------------------
-
-# error <- rs1_smoke %>% 
-#   filter(ergoid == 574001 | ergoid == 1944001 | ergoid == 3603002 | ergoid == 3607001 | ergoid == 3796002) %>% 
-#   select(ergoid, e1_ai7_20, e1_ai7_30, e2_b0cg, e2_b0ct, e2_b0pi, e3_cicg, e3_cipi, e3_cict, e3_cictps, e4_dicg, e4_dipi, e4_dict, e5_EILF6, e5_EILFE, e5_EILF4, e5_EILF5, starts_with("smoke"))
-# 
-# error <- error %>% 
-#   mutate(smoke2 = ifelse(e2_b0cg == 3 & e2_b0pi == 3 & e2_b0ct == 3, 0, NA), 
-#          smoke2 = ifelse((e2_b0cg == 2 | e2_b0pi == 2 | e2_b0ct == 2), 1, smoke2),
-#          smoke2 = ifelse((e2_b0cg == 1 | e2_b0pi == 1 | e2_b0ct == 1), 2, smoke2))
-# glimpse(error)
-# 
-# pattern_smoke_rs1<- rs1_smoke %>% 
-#   filter(!is.na(smoke1)) %>% 
-#   mutate(smoke2 = ifelse(is.na(smoke2), smoke1, smoke2),
-#          smoke3 = ifelse(is.na(smoke3), smoke2, smoke3),
-#          smoke4 = ifelse(is.na(smoke4), smoke3, smoke4),
-#          smoke5 = ifelse(is.na(smoke5), smoke4, smoke5)) %>% 
-#   count(smoke1, smoke2, smoke3, smoke4, smoke5)
-
-
-
-# Smoke cigarrets ---------------------------------------------------------
+# smoke cigarrets ---------------------------------------------------------
 smoke1_1 <- import("./00_raw_data/smoke/e1_intvw_SMOKING_(23-nov-2011).sav")
 smoke1_2 <- import("./00_raw_data/smoke/e2_intvw_SMOKING_(23-nov-2011).sav")
 smoke1_3 <- import("./00_raw_data/smoke/e3_intvw_SMOKING_(11-nov-2011).sav")
@@ -482,3 +460,289 @@ smoke_cig <- rs1_cig %>%
 export(smoke_cig, here::here("02_clean_data", "smoke_cig.Rdata"))
 
 
+
+# errors in smoking variable ----------------------------------------------
+
+# error <- rs1_smoke %>% 
+#   filter(ergoid == 574001 | ergoid == 1944001 | ergoid == 3603002 | ergoid == 3607001 | ergoid == 3796002) %>% 
+#   select(ergoid, e1_ai7_20, e1_ai7_30, e2_b0cg, e2_b0ct, e2_b0pi, e3_cicg, e3_cipi, e3_cict, e3_cictps, e4_dicg, e4_dipi, e4_dict, e5_EILF6, e5_EILFE, e5_EILF4, e5_EILF5, starts_with("smoke"))
+# 
+# error <- error %>% 
+#   mutate(smoke2 = ifelse(e2_b0cg == 3 & e2_b0pi == 3 & e2_b0ct == 3, 0, NA), 
+#          smoke2 = ifelse((e2_b0cg == 2 | e2_b0pi == 2 | e2_b0ct == 2), 1, smoke2),
+#          smoke2 = ifelse((e2_b0cg == 1 | e2_b0pi == 1 | e2_b0ct == 1), 2, smoke2))
+# glimpse(error)
+# 
+# pattern_smoke_rs1<- rs1_smoke %>% 
+#   filter(!is.na(smoke1)) %>% 
+#   mutate(smoke2 = ifelse(is.na(smoke2), smoke1, smoke2),
+#          smoke3 = ifelse(is.na(smoke3), smoke2, smoke3),
+#          smoke4 = ifelse(is.na(smoke4), smoke3, smoke4),
+#          smoke5 = ifelse(is.na(smoke5), smoke4, smoke5)) %>% 
+#   count(smoke1, smoke2, smoke3, smoke4, smoke5)
+
+
+
+# vital status ------------------------------------------------------------
+
+vital_status <- import(here::here("00_raw_data", "vital_status", "fp_VitalStatus_(24-MAY-2018).sav"))
+vital_status <- mort %>%
+  select(ergoid, fp_mortdat, fp_censordate) %>% 
+  rename(mort_date = fp_mortdat, censor_date = fp_censordate)
+
+export(vital_status, here::here("02_clean_data", "vital_status.Rdata"))
+
+# alcohol intake ---------------------------------------------------------
+
+oh1_1 <- import(here::here("00_raw_data", "alcohol", "e1_FFQ_AlcoholGramPerday_inclGLAZEN.sav"))
+oh1_2 <- import(here::here("00_raw_data", "alcohol", "e2_intvw_Alcoholperday_25-10-2013.sav"))
+oh1_3 <- import(here::here("00_raw_data", "alcohol", "e3_intvw_Alcoholperday_24-10-2017.sav"))
+oh1_4 <- import(here::here("00_raw_data", "alcohol", "e4_intvw_Alcoholperday_22-11-2013.sav"))
+oh1_5 <- import(here::here("00_raw_data", "alcohol", "e5intvw_Alcoholperday_11-07-2014.sav"))
+oh1_6 <- import(here::here("00_raw_data", "alcohol", "e6_AlcoholGramsDay_FFQ_energy_(13-dec-2018).sav"))
+oh2_1 <- import(here::here("00_raw_data", "alcohol", "ep_intvw_Alcoholperday_22-11-2013.sav"))
+oh3_1 <- import(here::here("00_raw_data", "alcohol", "ej_intvw_ALCOHOLGRAMSPERDAY_(14072014).sav"))
+
+#separate oh1_4 into rs1 and rs2
+oh2_2 <- oh1_4 %>%
+  filter(rs_cohort == 2)
+
+oh1_4 <- oh1_4 %>%
+  filter(rs_cohort == 1)
+
+#2. Separate bmi_5 into rs1, rs2, rs3
+oh3_2 <- oh1_5 %>%
+  filter(rs_cohort == 3)
+
+oh2_3 <- oh1_5 %>%
+  filter(rs_cohort == 2)
+
+oh1_5 <- oh1_5 %>%
+  filter(rs_cohort == 1)
+
+#3 Separate bmi_6 into rs1 and rs2
+
+oh1_6 <- oh1_6 %>%
+  filter(rs_cohort == 1)
+
+oh2_4 <- oh1_6 %>%
+  filter(rs_cohort == 2)
+
+### Merge cohorts for rs1
+oh1 <- list(oh1_1, oh1_2, oh1_3, oh1_4, oh1_5, oh1_6)
+
+rs1_oh <- reduce(oh1, left_join, by = c("ergoid"))
+
+dim(rs1_oh)
+
+### Merge cohorts for rs2
+oh2 <- list(oh2_1, oh2_2, oh2_3, oh2_4)
+
+rs2_oh <- reduce(oh2, left_join, by = c("ergoid"))
+
+dim(rs2_oh)
+
+### Merge cohorts for rs3
+oh3 <- list(oh3_1, oh3_2)
+
+rs3_oh <- reduce(oh3, left_join, by = c("ergoid"))
+
+dim(rs3_oh)
+
+### Select alcohol intake
+
+rs1_oh <- rs1_oh %>% 
+  select(ergoid, antalc, e2_Alc_Tot, e3_Alc_Tot, e4_Alc_Tot, e5_Alc_tot, e6_alc_item_sum) %>% 
+  rename(oh1 = antalc,
+         oh2 = e2_Alc_Tot,
+         oh3 = e3_Alc_Tot,
+         oh4 = e4_Alc_Tot,
+         oh5 = e5_Alc_tot,
+         oh6 = e6_alc_item_sum)
+
+rs2_oh <- rs2_oh %>% 
+  select(ergoid, ep_Alc_Tot, e4_Alc_Tot, e5_Alc_tot,e6_alc_item_sum) %>% 
+  rename(
+    oh3 = ep_Alc_Tot,
+    oh4 = e4_Alc_Tot,
+    oh5 = e5_Alc_tot,
+    oh6 = e6_alc_item_sum)
+
+rs3_oh <- rs3_oh %>% 
+  select(ergoid, ej_Alc_tot, e5_Alc_tot) %>% 
+  rename(
+    oh4 = ej_Alc_tot,
+    oh5 = e5_Alc_tot)
+
+### bind together
+
+alcohol <- rs1_oh %>% 
+  bind_rows(rs2_oh) %>% 
+  bind_rows(rs3_oh)
+
+label(alcohol) <- as.list(c("Identification",rep("Total alcohol intake g/day",6))) 
+
+export(oh, here::here("02_clean_data", "alcohol.Rdata"))
+
+
+
+### download from the wiki: https://epi-wiki.erasmusmc.nl/wiki/ergowiki/index.php/Hypertension
+ht <- import(here::here("00_raw_data", "hypertension", "HT2018_analysisfile_(15-may-2018).sav"))
+
+ht <- ht %>% 
+  select (ergoid, rs_cohort, e1_systolicBP, e1_HT2018, e2_systolicBP, e2_HT2018, e3_systolicBP, e3_HT2018, e4_systolicBP, e4_HT2018, e5_systolicBP, e5_HT2018, ep_systolicBP, ep_HT2018, ej_systolicBP, ej_HT2018,e6_systolicBP, e6_HT2018)
+
+ht1 <- ht %>%
+  filter(rs_cohort == 1) %>%
+  select(ergoid, contains("systolicBP"), contains("HT2018")) %>%
+  rename(
+    sbp1 = e1_systolicBP,
+    sbp2 = e2_systolicBP,
+    sbp3 = e3_systolicBP,
+    sbp4 = e4_systolicBP,
+    sbp5 = e5_systolicBP,
+    sbp6 = e6_systolicBP,
+    ht1 = e1_HT2018,
+    ht2 = e2_HT2018,
+    ht3 = e3_HT2018,
+    ht4 = e4_HT2018,
+    ht5 = e5_HT2018,
+    ht6 = e6_HT2018
+  )
+
+
+ht2 <- ht %>% 
+  filter(rs_cohort == 2) %>%
+  select(ergoid, contains("systolicBP"), contains("HT2018")) %>%
+  rename(
+    sbp3 = ep_systolicBP,
+    sbp4 = e4_systolicBP,
+    sbp5 = e5_systolicBP,
+    sbp6 = e6_systolicBP,
+    ht3 = ep_HT2018,
+    ht4 = e4_HT2018,
+    ht5 = e5_HT2018,
+    ht6 = e6_HT2018
+  )
+
+ht3 <- ht %>% 
+  filter(rs_cohort == 3) %>%
+  select(ergoid, contains("systolicBP"), contains("HT2018")) %>%
+  rename(
+    sbp4 = ej_systolicBP,
+    sbp5 = e5_systolicBP,
+    ht4 = ej_HT2018,
+    ht5 = e5_HT2018
+  )
+  
+hypertension <- ht1 %>% 
+  bind_rows(ht2) %>% 
+  bind_rows(ht3) %>%
+  select(ergoid, starts_with("sbp"), starts_with("ht"))
+
+label(hypertension)<- as.list(c("Identification",rep("Systolic Blood Pressure mmHg",6),rep("Hypertension, resting BP > 140/90 or taking BP lowering meds",6)))
+
+export(hypertension, here::here("02_clean_data", "hypertension.RData"))
+
+
+# Lipids ------------------------------------------------------------------
+
+chol1_1 <- import(here::here("00_raw_data", "cholesterol",  "e1_CHOLESTEROL_(10.03.2010).sav"))
+chol1_3 <- import(here::here("00_raw_data", "cholesterol",  "e3_(3)_LAB_(10-mar-2010).sav"))
+chol1_4 <- import(here::here("00_raw_data", "cholesterol",  "e4_(4)_LAB_(10-mar-2010)b.sav"))
+chol1_5 <- import(here::here("00_raw_data", "cholesterol",  "e5_(5)_LAB_(29-aug-2014)r.sav"))
+chol2_1 <- import(here::here("00_raw_data", "cholesterol",  "ep_(1)_LAB_(15-mar-2010).sav"))
+chol3_1 <- import(here::here("00_raw_data", "cholesterol",  "ej_(1)_LAB_(11-jun-2009)r.sav"))
+
+#chol1_6 <- import("./Cholesterol/e6_(6)_LAB_(10-jun-2016)r.sav") # No cholesterol data in that dataset yet, also not on the wiki yet
+
+#Separate chol1_5 into rs1, rs2, rs3
+
+chol3_2 <- chol1_5 %>%
+  filter(rs_cohort == 3)
+
+chol2_3 <- chol1_5 %>%
+  filter(rs_cohort == 2)
+
+chol1_5 <- chol1_5 %>%
+  filter(rs_cohort == 1)
+
+#separate chol1_4 into rs1 and rs2
+chol2_2 <- chol1_4 %>%
+  filter(rs_cohort == 2)
+
+chol1_4 <- chol1_4 %>%
+  filter(rs_cohort == 1)
+
+
+#separate the main variables
+chol1_1 <- chol1_1 %>% 
+  select(ergoid, e1_al7_chl, e1_al7_hdl) %>%
+  rename(chol1)
+  setnames(old = c("e1_al7_chl", "e1_al7_hdl"), new=c("chol1", "hdl1"))
+
+chol1_3 <- chol1_3 %>% 
+  select(ergoid, e3_3845, e3_4107 ) %>%
+  setnames(old = c("e3_3845", "e3_4107"), new=c("chol3", "hdl3"))
+
+chol1_4 <- chol1_4 %>% 
+  select(ergoid, rs_cohort, e4_3845, e4_4107 ) %>%
+  setnames(old = c("e4_3845", "e4_4107"), new=c("chol4", "hdl4"))
+
+chol1_5 <- chol1_5 %>% 
+  select(ergoid, rs_cohort, e5_3845, e5_4107 ) %>%
+  setnames(old = c("e5_3845", "e5_4107"), new=c("chol5", "hdl5"))
+
+#chol1_6 <- chol1_6 %>% 
+#  select(ergoid, rs_cohort, e6_3845, e6_4107 ) %>%
+#  setnames(old = c("e6_3845", "e6_4107"), new=c("chol6", "hdl6"))
+
+chol2_1 <- chol2_1 %>% 
+  select(ergoid, ep_3845, ep_4107) %>%
+  setnames(old = c("ep_3845", "ep_4107"), new=c("chol3", "hdl3"))
+
+chol3_1 <- chol3_1 %>% 
+  select(ergoid, ej_3845, ej_4107) %>%
+  setnames(old = c("ej_3845", "ej_4107"), new=c("chol4", "hdl4"))
+
+
+#separate chol1_6 into rs1 and rs2
+
+#chol2_4 <- chol1_6 %>% 
+#  filter(rs_cohort == 2) %>%
+#  select(ergoid,chol6, hdl6)
+
+#chol1_6 <- chol1_6 %>% 
+#  filter(rs_cohort == 1) %>%
+#  select(ergoid,chol6, hdl6)
+
+
+### Merge cohorts for rs1
+chol1 <- list(chol1_1, chol1_3, chol1_4, chol1_5)#, chol1_6)
+
+rs1_chol <- reduce(chol1, left_join, by = c("ergoid"))
+
+dim(rs1_chol)
+
+### Merge cohorts for rs2
+chol2 <- list(chol2_1, chol2_2, chol2_3)#,chol2_4)
+
+rs2_chol <- reduce(chol2, left_join, by = c("ergoid"))
+
+dim(rs2_chol)
+
+### Merge cohorts for rs3
+chol3 <- list(chol3_1, chol3_2)
+
+rs3_chol <- reduce(chol3, left_join, by = c("ergoid"))
+
+dim(rs3_chol)
+
+### bind together
+
+rs_chol <- rs1_chol %>% 
+  bind_rows(rs2_chol) %>% 
+  bind_rows(rs3_chol) %>% 
+  select(ergoid, chol1, chol3, chol4, chol5, hdl1, hdl3, hdl4, hdl5)
+
+label(rs_chol) <- as.list(c("Identification",rep("Cholesterol in serum (mmol/l)",4),rep("HDL-cholesterol in serum (mmol/l)",4)))
