@@ -1,0 +1,101 @@
+# Visit dates {#visit}
+
+Source: https://epi-wiki.erasmusmc.nl/wiki/ergowiki/index.php/Response_data
+
+1. Import data for all cohorts
+
+```{r, eval = FALSE}
+rs1_1 <- read_sav(here::here("00_raw_data", "visits", "Ergo1ResponseDetail_(22-jan-2015)_excerpt.sav"))
+rs1_2 <- read_sav(here::here("00_raw_data", "visits", "Ergo2ResponseDetail_(22-jan-2015)_excerpt.sav"))
+rs1_3 <- read_sav(here::here("00_raw_data", "visits", "e3_(3)_RESPONS_(22-feb-2016)_excerpt.sav"))
+rs1_4 <- read_sav(here::here("00_raw_data", "visits", "e4_(4)_RESPONS_(12-mar-2018)_excerpt.sav"))
+rs1_5 <- read_sav(here::here("00_raw_data", "visits", "e5_(5)_RESPONS_(22-jun-2016)_excerpt.sav"))
+rs1_6 <- read_sav(here::here("00_raw_data", "visits", "e6_(6)_RESPONS_(10-feb-2017)_EXCERPT.sav"))
+rs2_1 <- read_sav(here::here("00_raw_data", "visits", "ep_(1)_RESPONS_(15-jan-2019)_excerpt.sav"))
+rs3_1 <- read_sav(here::here("00_raw_data", "visits", "ej_(1)_RESPONS_(04-apr-2016)_excerpt.sav"))
+```
+
+2. Split datasets:
+
+```{r, eval = FALSE}
+
+#1. Separate rs1_4 into rs1, rs2
+
+rs2_2 <- rs1_4 %>%
+  filter(rs_cohort == 2)
+
+rs1_4 <- rs1_4 %>%
+  filter(rs_cohort == 1)
+
+#2. Separate rs1_5 into rs1, rs2, rs3
+rs3_2 <- rs1_5 %>%
+  filter(rs_cohort == 3)
+
+rs2_3 <- rs1_5 %>%
+  filter(rs_cohort == 2)
+
+rs1_5 <- rs1_5 %>%
+  filter(rs_cohort == 1)
+
+#3. rs1_6 into rs1 and rs2 
+rs2_4 <- rs1_6 %>%
+  filter(rs_cohort == 2)
+
+rs1_6 <- rs1_6 %>%
+  filter(rs_cohort == 1)
+
+```
+
+3. Merge the data for all visits, by cohort:
+
+```{r eval = FALSE}
+
+### Merge RSI
+
+rs1 <- list(rs1_1, rs1_2, rs1_3, rs1_4, rs1_5, rs1_6)
+
+rs1_vis <- reduce(rs1, left_join, by = c("ergoid", "rs_cohort"))
+
+### NOTE: RS1_2 had only 1 center visit and no home interview!
+
+### Merge RS2
+rs2 <- list(rs2_1, rs2_2, rs2_3, rs2_4)
+
+rs2_vis <- reduce(rs2, left_join, by = c("ergoid", "rs_cohort"))
+
+### Merge RS3
+
+rs3_vis <- rs3_1  %>%
+  left_join(rs3_2, by = c("ergoid", "rs_cohort"))
+```
+
+4. Select and rename the specific variables from the combined dataset, by cohort: In this case we selected the variables for the interview date.
+
+```{r, eval = FALSE}
+rs1_interview <- rs1_vis %>%
+  select(ergoid, rs_cohort, e1_aintdat, e2_bcendat, e3_3493, e4_3493, e5_3493, e6_3493) %>% 
+  rename(e1 = e1_aintdat, e2 = e2_bcendat, e3 = e3_3493, e4 = e4_3493, e5 = e5_3493, e6 = e6_3493)
+
+rs2_interview <- rs2_vis %>%
+  select(ergoid, rs_cohort , ep_3493, e4_3493, e5_3493, e6_3493) %>% 
+  rename(e3 = ep_3493, e4 = e4_3493, e5 = e5_3493, e6 = e6_3493)
+  
+rs3_interview <- rs3_vis %>%
+  select(ergoid, rs_cohort , ej_3493, e5_3493) %>% 
+  rename(e4 = ej_3493, e5 = e5_3493)
+```
+
+5. Bind, if necessary, the cohorts. Since the variable names are consistent through the datasets.
+
+```{r, eval = FALSE}
+visits <- rs1_interview %>% 
+  bind_rows(rs2_interview) %>% 
+  bind_rows(rs3_interview)
+```
+
+7. Export the variable to a `clean_data` folder.
+
+```{r, eval = FALSE}
+export(visits, here::here("02_clean_data", "visits.Rdata"))
+```
+

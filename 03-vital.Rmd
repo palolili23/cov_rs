@@ -1,0 +1,27 @@
+# ERGO Vital status {#vital}
+
+Source: https://epi-wiki.erasmusmc.nl/wiki/ergowiki/index.php/Fp_mortality
+
+This data only contains baseline information for the three cohorts, so we can skip steps 2,3 and 6 described in \@ref(intro)
+
+1. Import data
+
+```{r, eval = FALSE}
+vital_status <- import(here::here("00_raw_data", "vital_status", "fp_VitalStatus_(24-MAY-2018).sav"))
+```
+
+2. Select and rename variables:
+
+```{r eval = FALSE}
+
+vital_status <- vital_status %>%
+  select(ergoid, fp_mortdat, fp_censordate) %>%
+  rename(mort_date = fp_mortdat, censor_date = fp_censordate)
+
+```
+
+3. Export:
+
+```{r eval = FALSE}
+export(vital_status, here::here("02_clean_data", "vital_status.Rdata"))
+```

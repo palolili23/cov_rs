@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 5 Visit dates | Data cleaning guide for the Rotterdam Study</title>
+  <meta name="description" content="This is a guide that contains basic scripts for cleaning the data from the Rotterdam Study. It is intended to guide students on their own data cleaning process for specific aims." />
+  <meta name="generator" content="bookdown 0.11 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 5 Visit dates | Data cleaning guide for the Rotterdam Study" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="This is a guide that contains basic scripts for cleaning the data from the Rotterdam Study. It is intended to guide students on their own data cleaning process for specific aims." />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 5 Visit dates | Data cleaning guide for the Rotterdam Study" />
+  
+  <meta name="twitter:description" content="This is a guide that contains basic scripts for cleaning the data from the Rotterdam Study. It is intended to guide students on their own data cleaning process for specific aims." />
+  
+
+<meta name="author" content="Paloma Rojas Saunero, Eline Vinke" />
+
+
+<meta name="date" content="2019-07-12" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="vital.html">
+<link rel="next" href="bmi.html">
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(title);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">A Minimal Book Example</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Prerequisites</a></li>
+<li class="chapter" data-level="2" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>2</b> Introduction</a></li>
+<li class="chapter" data-level="3" data-path="basic.html"><a href="basic.html"><i class="fa fa-check"></i><b>3</b> ERGO Basics</a></li>
+<li class="chapter" data-level="4" data-path="vital.html"><a href="vital.html"><i class="fa fa-check"></i><b>4</b> ERGO Vital status</a></li>
+<li class="chapter" data-level="5" data-path="visit.html"><a href="visit.html"><i class="fa fa-check"></i><b>5</b> Visit dates</a></li>
+<li class="chapter" data-level="6" data-path="bmi.html"><a href="bmi.html"><i class="fa fa-check"></i><b>6</b> BMI, weight and height</a></li>
+<li class="chapter" data-level="7" data-path="education.html"><a href="education.html"><i class="fa fa-check"></i><b>7</b> Education</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Data cleaning guide for the Rotterdam Study</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="visit" class="section level1">
+<h1><span class="header-section-number">Chapter 5</span> Visit dates</h1>
+<p>Source: <a href="https://epi-wiki.erasmusmc.nl/wiki/ergowiki/index.php/Response_data" class="uri">https://epi-wiki.erasmusmc.nl/wiki/ergowiki/index.php/Response_data</a></p>
+<ol style="list-style-type: decimal">
+<li>Import data for all cohorts</li>
+</ol>
+<pre class="sourceCode r"><code class="sourceCode r">rs1_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">read_sav</span>(here<span class="op">::</span><span class="kw">here</span>(<span class="st">&quot;00_raw_data&quot;</span>, <span class="st">&quot;visits&quot;</span>, <span class="st">&quot;Ergo1ResponseDetail_(22-jan-2015)_excerpt.sav&quot;</span>))
+rs1_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">read_sav</span>(here<span class="op">::</span><span class="kw">here</span>(<span class="st">&quot;00_raw_data&quot;</span>, <span class="st">&quot;visits&quot;</span>, <span class="st">&quot;Ergo2ResponseDetail_(22-jan-2015)_excerpt.sav&quot;</span>))
+rs1_<span class="dv">3</span> &lt;-<span class="st"> </span><span class="kw">read_sav</span>(here<span class="op">::</span><span class="kw">here</span>(<span class="st">&quot;00_raw_data&quot;</span>, <span class="st">&quot;visits&quot;</span>, <span class="st">&quot;e3_(3)_RESPONS_(22-feb-2016)_excerpt.sav&quot;</span>))
+rs1_<span class="dv">4</span> &lt;-<span class="st"> </span><span class="kw">read_sav</span>(here<span class="op">::</span><span class="kw">here</span>(<span class="st">&quot;00_raw_data&quot;</span>, <span class="st">&quot;visits&quot;</span>, <span class="st">&quot;e4_(4)_RESPONS_(12-mar-2018)_excerpt.sav&quot;</span>))
+rs1_<span class="dv">5</span> &lt;-<span class="st"> </span><span class="kw">read_sav</span>(here<span class="op">::</span><span class="kw">here</span>(<span class="st">&quot;00_raw_data&quot;</span>, <span class="st">&quot;visits&quot;</span>, <span class="st">&quot;e5_(5)_RESPONS_(22-jun-2016)_excerpt.sav&quot;</span>))
+rs1_<span class="dv">6</span> &lt;-<span class="st"> </span><span class="kw">read_sav</span>(here<span class="op">::</span><span class="kw">here</span>(<span class="st">&quot;00_raw_data&quot;</span>, <span class="st">&quot;visits&quot;</span>, <span class="st">&quot;e6_(6)_RESPONS_(10-feb-2017)_EXCERPT.sav&quot;</span>))
+rs2_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">read_sav</span>(here<span class="op">::</span><span class="kw">here</span>(<span class="st">&quot;00_raw_data&quot;</span>, <span class="st">&quot;visits&quot;</span>, <span class="st">&quot;ep_(1)_RESPONS_(15-jan-2019)_excerpt.sav&quot;</span>))
+rs3_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">read_sav</span>(here<span class="op">::</span><span class="kw">here</span>(<span class="st">&quot;00_raw_data&quot;</span>, <span class="st">&quot;visits&quot;</span>, <span class="st">&quot;ej_(1)_RESPONS_(04-apr-2016)_excerpt.sav&quot;</span>))</code></pre>
+<ol start="2" style="list-style-type: decimal">
+<li>Split datasets:</li>
+</ol>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co">#1. Separate rs1_4 into rs1, rs2</span>
+
+rs2_<span class="dv">2</span> &lt;-<span class="st"> </span>rs1_<span class="dv">4</span> <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">filter</span>(rs_cohort <span class="op">==</span><span class="st"> </span><span class="dv">2</span>)
+
+rs1_<span class="dv">4</span> &lt;-<span class="st"> </span>rs1_<span class="dv">4</span> <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">filter</span>(rs_cohort <span class="op">==</span><span class="st"> </span><span class="dv">1</span>)
+
+<span class="co">#2. Separate rs1_5 into rs1, rs2, rs3</span>
+rs3_<span class="dv">2</span> &lt;-<span class="st"> </span>rs1_<span class="dv">5</span> <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">filter</span>(rs_cohort <span class="op">==</span><span class="st"> </span><span class="dv">3</span>)
+
+rs2_<span class="dv">3</span> &lt;-<span class="st"> </span>rs1_<span class="dv">5</span> <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">filter</span>(rs_cohort <span class="op">==</span><span class="st"> </span><span class="dv">2</span>)
+
+rs1_<span class="dv">5</span> &lt;-<span class="st"> </span>rs1_<span class="dv">5</span> <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">filter</span>(rs_cohort <span class="op">==</span><span class="st"> </span><span class="dv">1</span>)
+
+<span class="co">#3. rs1_6 into rs1 and rs2 </span>
+rs2_<span class="dv">4</span> &lt;-<span class="st"> </span>rs1_<span class="dv">6</span> <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">filter</span>(rs_cohort <span class="op">==</span><span class="st"> </span><span class="dv">2</span>)
+
+rs1_<span class="dv">6</span> &lt;-<span class="st"> </span>rs1_<span class="dv">6</span> <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">filter</span>(rs_cohort <span class="op">==</span><span class="st"> </span><span class="dv">1</span>)</code></pre>
+<ol start="3" style="list-style-type: decimal">
+<li>Merge the data for all visits, by cohort:</li>
+</ol>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co">### Merge RSI</span>
+
+rs1 &lt;-<span class="st"> </span><span class="kw">list</span>(rs1_<span class="dv">1</span>, rs1_<span class="dv">2</span>, rs1_<span class="dv">3</span>, rs1_<span class="dv">4</span>, rs1_<span class="dv">5</span>, rs1_<span class="dv">6</span>)
+
+rs1_vis &lt;-<span class="st"> </span><span class="kw">reduce</span>(rs1, left_join, <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;ergoid&quot;</span>, <span class="st">&quot;rs_cohort&quot;</span>))
+
+<span class="co">### </span><span class="al">NOTE</span><span class="co">: RS1_2 had only 1 center visit and no home interview!</span>
+
+<span class="co">### Merge RS2</span>
+rs2 &lt;-<span class="st"> </span><span class="kw">list</span>(rs2_<span class="dv">1</span>, rs2_<span class="dv">2</span>, rs2_<span class="dv">3</span>, rs2_<span class="dv">4</span>)
+
+rs2_vis &lt;-<span class="st"> </span><span class="kw">reduce</span>(rs2, left_join, <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;ergoid&quot;</span>, <span class="st">&quot;rs_cohort&quot;</span>))
+
+<span class="co">### Merge RS3</span>
+
+rs3_vis &lt;-<span class="st"> </span>rs3_<span class="dv">1</span>  <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">left_join</span>(rs3_<span class="dv">2</span>, <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;ergoid&quot;</span>, <span class="st">&quot;rs_cohort&quot;</span>))</code></pre>
+<ol start="4" style="list-style-type: decimal">
+<li>Select and rename the specific variables from the combined dataset, by cohort: In this case we selected the variables for the interview date.</li>
+</ol>
+<pre class="sourceCode r"><code class="sourceCode r">rs1_interview &lt;-<span class="st"> </span>rs1_vis <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">select</span>(ergoid, rs_cohort, e1_aintdat, e2_bcendat, e3_<span class="dv">3493</span>, e4_<span class="dv">3493</span>, e5_<span class="dv">3493</span>, e6_<span class="dv">3493</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">rename</span>(<span class="dt">e1 =</span> e1_aintdat, <span class="dt">e2 =</span> e2_bcendat, <span class="dt">e3 =</span> e3_<span class="dv">3493</span>, <span class="dt">e4 =</span> e4_<span class="dv">3493</span>, <span class="dt">e5 =</span> e5_<span class="dv">3493</span>, <span class="dt">e6 =</span> e6_<span class="dv">3493</span>)
+
+rs2_interview &lt;-<span class="st"> </span>rs2_vis <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">select</span>(ergoid, rs_cohort , ep_<span class="dv">3493</span>, e4_<span class="dv">3493</span>, e5_<span class="dv">3493</span>, e6_<span class="dv">3493</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">rename</span>(<span class="dt">e3 =</span> ep_<span class="dv">3493</span>, <span class="dt">e4 =</span> e4_<span class="dv">3493</span>, <span class="dt">e5 =</span> e5_<span class="dv">3493</span>, <span class="dt">e6 =</span> e6_<span class="dv">3493</span>)
+  
+rs3_interview &lt;-<span class="st"> </span>rs3_vis <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">select</span>(ergoid, rs_cohort , ej_<span class="dv">3493</span>, e5_<span class="dv">3493</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">rename</span>(<span class="dt">e4 =</span> ej_<span class="dv">3493</span>, <span class="dt">e5 =</span> e5_<span class="dv">3493</span>)</code></pre>
+<ol start="5" style="list-style-type: decimal">
+<li>Bind, if necessary, the cohorts. Since the variable names are consistent through the datasets.</li>
+</ol>
+<pre class="sourceCode r"><code class="sourceCode r">visits &lt;-<span class="st"> </span>rs1_interview <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">bind_rows</span>(rs2_interview) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">bind_rows</span>(rs3_interview)</code></pre>
+<ol start="7" style="list-style-type: decimal">
+<li>Export the variable to a <code>clean_data</code> folder.</li>
+</ol>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">export</span>(visits, here<span class="op">::</span><span class="kw">here</span>(<span class="st">&quot;02_clean_data&quot;</span>, <span class="st">&quot;visits.Rdata&quot;</span>))</code></pre>
+
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="vital.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="bmi.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"google": false,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"download": ["cov_rs.pdf", "cov_rs.epub"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+</body>
+
+</html>

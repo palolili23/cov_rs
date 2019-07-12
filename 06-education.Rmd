@@ -1,0 +1,41 @@
+# Education {#education}
+
+Source: https://epi-wiki.erasmusmc.nl/wiki/ergowiki/index.php/Education
+
+This data only contains baseline information for the three cohorts, so we can skip steps 2,3 and 6 described in \@ref(intro)
+
+1. Import data
+
+```{r, eval = FALSE}
+educ <- read_sav(here::here("00_raw_data", "education", "Education RS-I-II-III (UNESCO class)_(12-MAR-2015).sav"))
+
+```
+
+2. Rename variable:
+
+```{r}
+educ <- educ %>%
+  rename(education = ses_UNESCO_recoded)
+
+```
+
+3. Add labels to variable
+```{r eval = FALSE}
+
+educ <- educ %>%
+  mutate(education = labelled(
+    education,
+    c(
+      `Primary education` = 0,
+      `lower or intermediate general education OR lower vocational education` = 1,
+      `intermediate vocational education OR higher general education` = 2,
+      `higher vocational education OR university` = 3)
+  ))
+
+```
+
+4. Export:
+
+```{r eval = FALSE}
+export(educ, here::here("02_clean_data", "educ.Rdata"))
+```

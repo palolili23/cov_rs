@@ -1,0 +1,36 @@
+# ERGO Basics {#basic}
+
+Source: https://epi-wiki.erasmusmc.nl/wiki/ergowiki/index.php/Ergobasics
+
+This data only contains baseline information for the three cohorts, so we can skip steps 2,3 and 6 described in \@ref(intro)
+
+1. Import data
+
+```{r, eval = FALSE}
+basic <- read_sav(here::here("00_raw_data", "basic", "RoterdamStudy_Basics2014.sav"))
+```
+
+2. Select variables:
+
+```{r eval = FALSE}
+basic <- basic %>%
+  select(ergoid, rs_cohort, sex, date_of_birth, startdat)
+
+```
+
+3. Transform variables:
+
+```{r eval = FALSE}
+basic <- basic %>%
+  mutate(age_0 = round(as.numeric(as.period((date_of_birth %--% startdat ), "years"), "years"), 2),
+         sex = labelled(sex, c(Female = 1, Male = 0)))
+
+```
+
+4. Export:
+
+```{r eval = FALSE}
+export(basic, here::here("02_clean_data", "basic.Rdata"))
+```
+
+

@@ -1,0 +1,116 @@
+# Alcohol {#alcohol}
+
+Source: https://epi-wiki.erasmusmc.nl/wiki/ergowiki/index.php/Alcohol
+
+1. Import data for all cohorts
+
+```{r, eval = FALSE}
+oh1_1 <- read_sav(here::here("00_raw_data", "alcohol", "e1_FFQ_AlcoholGramPerday_inclGLAZEN.sav"))
+oh1_2 <- read_sav(here::here("00_raw_data", "alcohol", "e2_intvw_Alcoholperday_25-10-2013.sav"))
+oh1_3 <- read_sav(here::here("00_raw_data", "alcohol", "e3_intvw_Alcoholperday_24-10-2017.sav"))
+oh1_4 <- read_sav(here::here("00_raw_data", "alcohol", "e4_intvw_Alcoholperday_22-11-2013.sav"))
+oh1_5 <- read_sav(here::here("00_raw_data", "alcohol", "e5intvw_Alcoholperday_11-07-2014.sav"))
+oh1_6 <- read_sav(here::here("00_raw_data", "alcohol", "e6_AlcoholGramsDay_FFQ_energy_(13-dec-2018).sav"))
+oh2_1 <- read_sav(here::here("00_raw_data", "alcohol", "ep_intvw_Alcoholperday_22-11-2013.sav"))
+oh3_1 <- read_sav(here::here("00_raw_data", "alcohol", "ej_intvw_ALCOHOLGRAMSPERDAY_(14072014).sav"))
+
+```
+
+2. Split datasets:
+
+```{r, eval = FALSE}
+
+# 1. Separate oh1_4 into rs1, rs2
+
+oh2_2 <- oh1_4 %>%
+  filter(rs_cohort == 2)
+
+oh1_4 <- oh1_4 %>%
+  filter(rs_cohort == 1)
+
+# 2. Separate oh1_5 into rs1, rs2, rs3
+
+oh3_2 <- oh1_5 %>%
+  filter(rs_cohort == 3)
+
+oh2_3 <- oh1_5 %>%
+  filter(rs_cohort == 2)
+
+oh1_5 <- oh1_5 %>%
+  filter(rs_cohort == 1)
+
+# 3. Separate oh1_6 into rs1 and rs2
+
+oh1_6 <- oh1_6 %>%
+  filter(rs_cohort == 1)
+
+oh2_4 <- oh1_6 %>%
+  filter(rs_cohort == 2)
+
+```
+
+3. Merge the data for all visits, by cohort:
+
+```{r eval = FALSE}
+
+### Merge RSI
+
+oh1 <- list(oh1_1, oh1_2, oh1_3, oh1_4, oh1_5, oh1_6)
+
+rs1_oh <- reduce(oh1, left_join, by = c("ergoid"))
+
+### Merge RS2
+
+oh2 <- list(oh2_1, oh2_2, oh2_3, oh2_4)
+
+rs2_oh <- reduce(oh2, left_join, by = c("ergoid"))
+
+### Merge RS3
+
+oh3 <- list(oh3_1, oh3_2)
+
+rs3_oh <- reduce(oh3, left_join, by = c("ergoid"))
+
+```
+
+4. Select and rename the specific variables from the combined dataset, by cohort: 
+
+```{r, eval = FALSE}
+rs1_oh <- rs1_oh %>% 
+  select(ergoid, antalc, e2_Alc_Tot, e3_Alc_Tot, e4_Alc_Tot, e5_Alc_tot, e6_alc_item_sum) %>% 
+  rename(oh1 = antalc,
+         oh2 = e2_Alc_Tot,
+         oh3 = e3_Alc_Tot,
+         oh4 = e4_Alc_Tot,
+         oh5 = e5_Alc_tot,
+         oh6 = e6_alc_item_sum)
+
+rs2_oh <- rs2_oh %>% 
+  select(ergoid, ep_Alc_Tot, e4_Alc_Tot, e5_Alc_tot,e6_alc_item_sum) %>% 
+  rename(
+    oh3 = ep_Alc_Tot,
+    oh4 = e4_Alc_Tot,
+    oh5 = e5_Alc_tot,
+    oh6 = e6_alc_item_sum)
+  
+rs3_oh <- rs3_oh %>% 
+  select(ergoid, ej_Alc_tot, e5_Alc_tot) %>% 
+  rename(
+    oh4 = ej_Alc_tot,
+    oh5 = e5_Alc_tot)
+```
+
+6. Bind , the cohorts. Since the variable names are consistent through the datasets.
+
+```{r, eval = FALSE}
+alcohol <- rs1_oh %>% 
+  bind_rows(rs2_oh) %>% 
+  bind_rows(rs3_oh)
+```
+
+7. Export the variable to a `clean_data` folder.
+
+```{r, eval = FALSE}
+export(alcohol, here::here("02_clean_data", "alcohol.Rdata"))
+```
+

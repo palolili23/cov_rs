@@ -1,0 +1,137 @@
+# Smoke anything {#smoke}
+
+Source: https://epi-wiki.erasmusmc.nl/wiki/ergowiki/index.php/Alcohol
+
+1. Import data for all cohorts
+
+```{r, eval = FALSE}
+smoke1_1 <- read_sav(here::here("00_raw_data", "smoke", "e1_intvw_SMOKING_(23-nov-2011).sav"))
+smoke1_2 <- read_sav(here::here("00_raw_data", "smoke", "e2_intvw_SMOKING_(23-nov-2011).sav"))
+smoke1_3 <- read_sav(here::here("00_raw_data", "smoke", "e3_intvw_SMOKING_(11-nov-2011).sav"))
+smoke1_4 <- read_sav(here::here("00_raw_data", "smoke", "e4_intvw_SMOKING_(04-nov-2011).sav"))
+smoke1_5 <- read_sav(here::here("00_raw_data", "smoke", "e5_intvw_SMOKING_(04-sep-2014).sav"))
+smoke2_1 <- read_sav(here::here("00_raw_data", "smoke", "ep_intvw_SMOKING_(30-sep-2011).sav"))
+smoke3_1 <- read_sav(here::here("00_raw_data", "smoke", "ej_intvw_SMOKING_(28-mar-2011).sav"))
+smoke1_6 <- read_sav(here::here("00_raw_data", "smoke", "e6_intvw_SMOKING_(20-feb-2017).sav"))
+```
+
+2. Split datasets:
+  
+```{r, eval = FALSE}
+
+# 1. Separate smoke1_4 into rs1, rs2
+
+smoke2_2 <- smoke1_4 %>%
+  filter(rs_cohort == 2)
+
+smoke1_4 <- smoke1_4 %>%
+  filter(rs_cohort == 1)
+
+# 2. Separate smoke1_5 into rs1, rs2, rs3
+
+smoke3_2 <- smoke1_5 %>%
+  filter(rs_cohort == 3)
+
+smoke2_3 <- smoke1_5 %>%
+  filter(rs_cohort == 2)
+
+smoke1_5 <- smoke1_5 %>%
+  filter(rs_cohort == 1)
+
+# 3. Separate smoke1_6 into rs1 and rs2
+
+smoke1_6 <- smoke1_6 %>%
+  filter(rs_cohort == 1)
+
+smoke2_4 <- smoke1_6 %>% 
+  filter(rs_cohort == 2)
+
+```
+
+3. Merge the data for all visits, by cohort:
+  
+```{r eval = FALSE}
+
+### Merge RSI
+
+smoke1 <- list(smoke1_1, smoke1_2, smoke1_3, smoke1_4, smoke1_5, smoke1_6)
+
+rs1_smoke<- reduce(smoke1, left_join, by = c("ergoid", "rs_cohort"))
+
+### Merge RS2
+
+smoke2 <- list(smoke2_1, smoke2_2, smoke2_3, smoke2_4)
+
+rs2_smoke <- reduce(smoke2, left_join, by = c("ergoid", "rs_cohort"))
+
+### Merge RS3
+
+rs3_smoke <- smoke3_1 %>%
+  left_join(smoke3_2, by= c("ergoid", "rs_cohort"))
+
+```
+
+4. Create variable smoke (0: never, 1: former, 2: current, NA) using the multiple questions related to smoking habits.
+  
+```{r, eval = FALSE}
+rs1_smoke <- rs1_smoke%>%
+  mutate(smoke1 = ifelse((e1_ai7_20 == 0 & e1_ai7_30 == 0), 0, NA),
+         smoke1 = ifelse((e1_ai7_20 == 0 & e1_ai7_30 == 1), 1, smoke1),
+         smoke1 = ifelse(e1_ai7_20 == 1, 2, smoke1),
+         smoke2 = ifelse(e2_b0cg == 3 & e2_b0pi == 3 & e2_b0ct == 3, 0, NA),
+         smoke2 = ifelse((e2_b0cg == 2 | e2_b0pi == 2 | e2_b0ct == 2), 1, smoke2),
+         smoke2 = ifelse((e2_b0cg == 1 | e2_b0pi == 1 | e2_b0ct == 1), 2, smoke2),
+         smoke3 = ifelse(e3_cicg == 0 & e3_cipi == 0 & e3_cict == 0 & e3_cictps == 0, 0, NA),
+         smoke3 = ifelse((e3_cicg == 1 |e3_cipi == 1 |(e3_cict == 0 & e3_cictps == 1)), 1, smoke3),
+         smoke3 = ifelse((e3_cicg == 2 |e3_cicg == 3 | e3_cipi == 2 | e3_cipi == 3 | e3_cict == 1), 2, smoke3),
+         smoke4 = ifelse(e4_dicg == 0 & e4_dipi == 0 & e4_dict == 0, 0, NA),
+         smoke4 = ifelse((e4_dicg == 1 |e4_dipi == 1 | e4_dict == 2 | e4_dict == 3), 1, smoke4),
+         smoke4 = ifelse((e4_dicg == 2 |e4_dicg == 3 | e4_dipi == 2 | e4_dipi == 3 | e4_dict == 1), 2, smoke4),
+         smoke5 = ifelse(e5_EILF6 == 0 & e5_EILFE == 0 & e5_EILF5 == 0 & e5_EILF4 == 0, 0, NA), 
+         smoke5 = ifelse(((e5_EILF6 == 0 & e5_EILFE == 1)| e5_EILF5 == 1 | e5_EILF4 == 1 | e5_EILF4 == 2 | e5_EILF4 == 3), 1, smoke5),
+         smoke5 = ifelse((e5_EILF6 == 1 | e5_EILF5 == 2 | e5_EILF4 == 4 | e5_EILF4 == 5 | e5_EILF4 == 6), 2, smoke5),
+         smoke6 = ifelse((e6_EILF6 == 0 & e6_EILSE5 == 0 & e6_EILF5 == 0 & e6_EILF4 == 0), 0, NA),
+         smoke6 = ifelse(((e6_EILF6 == 0 & (e6_EILSE5 == 1 |e6_EILSE5 == 2))| e6_EILF5 == 1 | e6_EILF4 == 1 | e6_EILF4 == 2 | e6_EILF4 == 3), 1, smoke6),
+         smoke6 = ifelse((e6_EILF6 == 1 | e6_EILF5 == 2 | e6_EILF4 == 4 | e6_EILF4 == 5 | e6_EILF4 == 6), 2, smoke6)) %>% 
+  select(ergoid, smoke1, smoke2, smoke3, smoke4, smoke5)
+
+rs2_smoke <- rs2_smoke%>%
+  mutate(smoke3 = ifelse(ep_lf4 == 0 & ep_lf5 == 0 & ep_lf6 == 0 & ep_lf6e == 0, 0, NA),
+         smoke3 = ifelse((ep_lf4 == 1 | ep_lf5 == 1 | (ep_lf6 == 0 & ep_lf6e == 1)), 1, smoke3),
+         smoke3 = ifelse((ep_lf4 == 2 | ep_lf5 == 2 | ep_lf6 == 1), 2, smoke3),
+         smoke4 = ifelse(e4_dicg == 0 & e4_dipi == 0 & e4_dict == 0, 0, NA), 
+         smoke4 = ifelse((e4_dicg == 1 |e4_dipi == 1 | e4_dict == 2 | e4_dict == 3), 1, smoke4), 
+         smoke4 = ifelse((e4_dicg == 2 |e4_dicg == 3 | e4_dipi == 2 | e4_dipi == 3 | e4_dict == 1), 2, smoke4),
+         smoke5 = ifelse(e5_EILF6 == 0 & e5_EILFE == 0 & e5_EILF5 == 0 & e5_EILF4 == 0, 0, NA), 
+         smoke5 = ifelse(((e5_EILF6 == 0 & e5_EILFE == 1)| e5_EILF5 == 1 | e5_EILF4 == 1 | e5_EILF4 == 2 | e5_EILF4 == 3), 1, smoke5),
+         smoke5 = ifelse((e5_EILF6 == 1 | e5_EILF5 == 1 | e5_EILF4 == 4 | e5_EILF4 == 5 | e5_EILF4 == 6), 2, smoke5),
+         smoke6 = ifelse(e6_EILF6 == 0 & e6_EILSE5 == 0 & e6_EILF5 == 0 & e6_EILF4 == 0, 0, NA),
+         smoke6 = ifelse(((e6_EILF6 == 0 & (e6_EILSE5 == 1 |e6_EILSE5 == 2))| e6_EILF5 == 1 | e6_EILF4 == 1 | e6_EILF4 == 2 | e6_EILF4 == 3), 1, smoke6),
+         smoke6 = ifelse((e6_EILF6 == 1 | e6_EILF5 == 2 | e6_EILF4 == 4 | e6_EILF4 == 5 | e6_EILF4 == 6), 2, smoke6)) %>%
+  select(ergoid, rs_cohort, smoke3, smoke4, smoke5, smoke6)
+  
+  
+rs3_smoke <- rs3_smoke%>%
+  mutate(smoke4 = ifelse(ej_yilf4 == 0 & ej_yilf5 == 0 & ej_yilf6 == 0 & ej_yilfe == 0, 0, NA),
+         smoke4 = ifelse((ej_yilf4 == 1 | ej_yilf4 == 2 | ej_yilf4 == 3 | ej_yilf5 == 1 | (ej_yilf6 == 0 & ej_yilfe == 1)), 1, smoke4),
+         smoke4 = ifelse((ej_yilf4 == 4 | ej_yilf4 == 5 | ej_yilf4 == 6 | ej_yilf5 == 2 | ej_yilf6 == 1), 2, smoke4),
+         smoke5 = ifelse(e5_EILF6 == 0 & e5_EILFE == 0 & e5_EILF5 == 0 & e5_EILF4 == 0, 0, NA),
+         smoke5 = ifelse(((e5_EILF6 == 0 & e5_EILFE == 1)| e5_EILF5 == 1 | e5_EILF4 == 1 | e5_EILF4 == 2 | e5_EILF4 == 3), 1, smoke5),
+         smoke5 = ifelse((e5_EILF6 == 1 | e5_EILF5 == 1 | e5_EILF4 == 4 | e5_EILF4 == 5 | e5_EILF4 == 6), 2, smoke5)) %>% 
+  select(ergoid, rs_cohort, smoke4, smoke5)
+```
+
+6. Bind , the cohorts. Since the variable names are consistent through the datasets.
+
+```{r, eval = FALSE}
+smoke <- rs1_smoke %>% 
+  bind_rows(rs2_smoke) %>% 
+  bind_rows(rs3_smoke)
+```
+
+7. Export the variable to a `clean_data` folder.
+
+```{r, eval = FALSE}
+export(smoke, here::here("02_clean_data", "smoke.Rdata"))
+```
+
