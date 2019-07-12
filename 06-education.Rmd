@@ -13,7 +13,7 @@ educ <- read_sav(here::here("00_raw_data", "education", "Education RS-I-II-III (
 
 2. Rename variable:
 
-```{r}
+```{r, eval = FALSE}
 educ <- educ %>%
   rename(education = ses_UNESCO_recoded)
 

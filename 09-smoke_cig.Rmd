@@ -1,0 +1,161 @@
+# Smoke cigarettes {#smoke_cig}
+
+Source: https://epi-wiki.erasmusmc.nl/wiki/ergowiki/index.php/Smoking
+
+1. Import data for all cohorts
+
+```{r, eval = FALSE}
+smoke1_1 <- read_sav(here::here("00_raw_data", "smoke", "e1_intvw_SMOKING_(23-nov-2011).sav"))
+smoke1_2 <- read_sav(here::here("00_raw_data", "smoke", "e2_intvw_SMOKING_(23-nov-2011).sav"))
+smoke1_3 <- read_sav(here::here("00_raw_data", "smoke", "e3_intvw_SMOKING_(11-nov-2011).sav"))
+smoke1_4 <- read_sav(here::here("00_raw_data", "smoke", "e4_intvw_SMOKING_(04-nov-2011).sav"))
+smoke1_5 <- read_sav(here::here("00_raw_data", "smoke", "e5_intvw_SMOKING_(04-sep-2014).sav"))
+smoke2_1 <- read_sav(here::here("00_raw_data", "smoke", "ep_intvw_SMOKING_(30-sep-2011).sav"))
+smoke3_1 <- read_sav(here::here("00_raw_data", "smoke", "ej_intvw_SMOKING_(28-mar-2011).sav"))
+smoke1_6 <- read_sav(here::here("00_raw_data", "smoke", "e6_intvw_SMOKING_(20-feb-2017).sav"))
+```
+
+2. Split datasets (same steps as in @\ref(smoke):
+  
+```{r, eval = FALSE}
+
+# 1. Separate smoke1_4 into rs1, rs2
+
+smoke2_2 <- smoke1_4 %>%
+  filter(rs_cohort == 2)
+
+smoke1_4 <- smoke1_4 %>%
+  filter(rs_cohort == 1)
+
+# 2. Separate smoke1_5 into rs1, rs2, rs3
+
+smoke3_2 <- smoke1_5 %>%
+  filter(rs_cohort == 3)
+
+smoke2_3 <- smoke1_5 %>%
+  filter(rs_cohort == 2)
+
+smoke1_5 <- smoke1_5 %>%
+  filter(rs_cohort == 1)
+
+# 3. Separate smoke1_6 into rs1 and rs2
+
+smoke1_6 <- smoke1_6 %>%
+  filter(rs_cohort == 1)
+
+smoke2_4 <- smoke1_6 %>% 
+  filter(rs_cohort == 2)
+
+```
+
+3. Merge the data for all visits, by cohort:
+  
+```{r eval = FALSE}
+
+### Merge RSI
+
+smoke1 <-
+  list(smoke1_1, smoke1_2, smoke1_3, smoke1_4, smoke1_5, smoke1_6)
+
+rs1_smoke<- reduce(smoke1, left_join, by = c("ergoid", "rs_cohort"))
+
+### Merge RS2
+
+smoke2 <- list(smoke2_1, smoke2_2, smoke2_3, smoke2_4)
+
+rs2_smoke <-
+  reduce(smoke2, left_join, by = c("ergoid", "rs_cohort"))
+
+### Merge RS3
+
+rs3_smoke <- smoke3_1 %>%
+  left_join(smoke3_2, by= c("ergoid", "rs_cohort"))
+
+```
+
+4. Create variable `smoke_cig` (0: never, 1: former, 2: current, NA) using only the questions related to smoking cigarettes.
+  
+```{r, eval = FALSE}
+rs1_cig <- rs1_smoke %>%
+  mutate(
+    smoke_cig1 = ifelse((e1_ai7_20 == 0 & e1_ai7_30 == 0), 0, NA),
+    smoke_cig1 = ifelse((e1_ai7_20 == 0 &
+                           e1_ai7_30 == 1), 1, smoke_cig1),
+    smoke_cig1 = ifelse(e1_ai7_20 == 1, 2, smoke_cig1),
+    smoke_cig2 = ifelse(e2_b0ct == 3, 0, NA),
+    smoke_cig2 = ifelse(e2_b0ct == 2, 1, smoke_cig2),
+    smoke_cig2 = ifelse(e2_b0ct == 1, 2, smoke_cig2),
+    smoke_cig3 = ifelse((e3_cict == 0 &
+                           e3_cictps == 0), 0, NA),
+    smoke_cig3 = ifelse((e3_cict == 0 &
+                           e3_cictps == 1), 1, smoke_cig3),
+    smoke_cig3 = ifelse(e3_cict == 1, 2, smoke_cig3),
+    smoke_cig4 = ifelse(e4_dict == 0, 0, NA),
+    smoke_cig4 = ifelse((e4_dict == 2 |
+                           e4_dict == 3), 1, smoke_cig4),
+    smoke_cig4 = ifelse(e4_dict == 1, 2, smoke_cig4),
+    smoke_cig5 = ifelse(e5_EILF6 == 0 & e5_EILFE == 0, 0, NA),
+    smoke_cig5 = ifelse((e5_EILF6 == 0 &
+                           e5_EILFE == 1), 1, smoke_cig5),
+    smoke_cig5 = ifelse(e5_EILF6 == 1, 2, smoke_cig5),
+    smoke_cig6 = ifelse((e6_EILF6 == 0 &
+                           e6_EILSE5 == 0), 0, NA),
+    smoke_cig6 = ifelse((
+      e6_EILF6 == 0 & (e6_EILSE5 == 1 | e6_EILSE5 == 2)
+    ), 1, smoke_cig6),
+    smoke_cig6 = ifelse((e6_EILF6 == 1), 2, smoke_cig6)
+  ) %>%
+  select(ergoid, starts_with("smoke_cig"))
+
+rs2_cig <- rs2_smoke %>%
+  mutate(
+    smoke_cig3 = ifelse((ep_lf6 == 0 & ep_lf6e == 0), 0, NA),
+    smoke_cig3 = ifelse((ep_lf6 == 0 &
+                           ep_lf6e == 1), 1, smoke_cig3),
+    smoke_cig3 = ifelse(ep_lf6 == 1, 2, smoke_cig3),
+    smoke_cig4 = ifelse(e4_dict == 0, 0, NA),
+    smoke_cig4 = ifelse((e4_dict == 2 |
+                           e4_dict == 3), 1, smoke_cig4),
+    smoke_cig4 = ifelse(e4_dict == 1, 2, smoke_cig4),
+    smoke_cig5 = ifelse(e5_EILF6 == 0 & e5_EILFE == 0, 0, NA),
+    smoke_cig5 = ifelse((e5_EILF6 == 0 &
+                           e5_EILFE == 1), 1, smoke_cig5),
+    smoke_cig5 = ifelse(e5_EILF6 == 1, 2, smoke_cig5),
+    smoke_cig6 = ifelse((e6_EILF6 == 0 &
+                           e6_EILSE5 == 0), 0, NA),
+    smoke_cig6 = ifelse((
+      e6_EILF6 == 0 & (e6_EILSE5 == 1 | e6_EILSE5 == 2)
+    ), 1, smoke_cig6),
+    smoke_cig6 = ifelse((e6_EILF6 == 1), 2, smoke_cig6)
+  ) %>%
+  select(ergoid, starts_with("smoke_cig"))
+
+rs3_cig <- rs3_smoke %>%
+  mutate(
+    smoke_cig4 = ifelse(ej_yilf6 == 0 & ej_yilfe == 0, 0, NA),
+    smoke_cig4 = ifelse(ej_yilf6 == 0 &
+                          ej_yilfe == 1, 1, smoke_cig4),
+    smoke_cig4 = ifelse(ej_yilf6 == 1, 2, smoke_cig4),
+    smoke_cig5 = ifelse((e5_EILF6 == 0 &
+                           e5_EILFE == 0), 0, NA),
+    smoke_cig5 = ifelse((e5_EILF6 == 0 &
+                           e5_EILFE == 1), 1, smoke_cig5),
+    smoke_cig5 = ifelse(e5_EILF6 == 1, 2, smoke_cig5)
+  ) %>%
+  select(ergoid, smoke_cig4, smoke_cig5)
+```
+
+6. Bind , the cohorts. Since the variable names are consistent through the datasets.
+
+```{r, eval = FALSE}
+smoke_cig <- rs1_cig %>%
+  bind_rows(rs2_cig) %>%
+  bind_rows(rs3_cig)
+```
+
+7. Export the variable to a `clean_data` folder.
+
+```{r, eval = FALSE}
+export(smoke_cig, here::here("02_clean_data", "smoke_cig.Rdata"))
+```
+
