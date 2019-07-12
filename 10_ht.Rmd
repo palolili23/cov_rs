@@ -27,7 +27,7 @@ ht3 <- ht %>%
 
 3. Select and rename variables:
 
-```{r}
+```{r, eval = FALSE}
 ht1 <- ht %>%
   select(ergoid, contains("systolicBP"), contains("diastolicBP"), contains("HT2018"), contains("bpldrug")) %>%
   rename(

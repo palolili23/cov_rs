@@ -32,7 +32,7 @@
   
   
 <link rel="prev" href="alcohol.html">
-
+<link rel="next" href="smoke-cig.html">
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -138,6 +138,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="7" data-path="education.html"><a href="education.html"><i class="fa fa-check"></i><b>7</b> Education</a></li>
 <li class="chapter" data-level="8" data-path="alcohol.html"><a href="alcohol.html"><i class="fa fa-check"></i><b>8</b> Alcohol</a></li>
 <li class="chapter" data-level="9" data-path="smoke.html"><a href="smoke.html"><i class="fa fa-check"></i><b>9</b> Smoke anything</a></li>
+<li class="chapter" data-level="10" data-path="smoke-cig.html"><a href="smoke-cig.html"><i class="fa fa-check"></i><b>10</b> Smoke cigarettes</a></li>
+<li class="chapter" data-level="11" data-path="ht.html"><a href="ht.html"><i class="fa fa-check"></i><b>11</b> Hipertension</a></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
 
@@ -160,7 +162,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="smoke" class="section level1">
 <h1><span class="header-section-number">Chapter 9</span> Smoke anything</h1>
-<p>Source: <a href="https://epi-wiki.erasmusmc.nl/wiki/ergowiki/index.php/Alcohol" class="uri">https://epi-wiki.erasmusmc.nl/wiki/ergowiki/index.php/Alcohol</a></p>
+<p>Source: <a href="https://epi-wiki.erasmusmc.nl/wiki/ergowiki/index.php/Smoking" class="uri">https://epi-wiki.erasmusmc.nl/wiki/ergowiki/index.php/Smoking</a></p>
 <ol style="list-style-type: decimal">
 <li>Import data for all cohorts</li>
 </ol>
@@ -199,80 +201,219 @@ smoke1_<span class="dv">5</span> &lt;-<span class="st"> </span>smoke1_<span clas
 smoke1_<span class="dv">6</span> &lt;-<span class="st"> </span>smoke1_<span class="dv">6</span> <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">filter</span>(rs_cohort <span class="op">==</span><span class="st"> </span><span class="dv">1</span>)
 
-smoke2_<span class="dv">4</span> &lt;-<span class="st"> </span>smoke1_<span class="dv">6</span> <span class="op">%&gt;%</span><span class="st"> </span>
+smoke2_<span class="dv">4</span> &lt;-<span class="st"> </span>smoke1_<span class="dv">6</span> <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">filter</span>(rs_cohort <span class="op">==</span><span class="st"> </span><span class="dv">2</span>)</code></pre>
 <ol start="3" style="list-style-type: decimal">
 <li>Merge the data for all visits, by cohort:</li>
 </ol>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="co">### Merge RSI</span>
 
-smoke1 &lt;-<span class="st"> </span><span class="kw">list</span>(smoke1_<span class="dv">1</span>, smoke1_<span class="dv">2</span>, smoke1_<span class="dv">3</span>, smoke1_<span class="dv">4</span>, smoke1_<span class="dv">5</span>, smoke1_<span class="dv">6</span>)
+smoke1 &lt;-
+<span class="st">  </span><span class="kw">list</span>(smoke1_<span class="dv">1</span>, smoke1_<span class="dv">2</span>, smoke1_<span class="dv">3</span>, smoke1_<span class="dv">4</span>, smoke1_<span class="dv">5</span>, smoke1_<span class="dv">6</span>)
 
-rs1_smoke&lt;-<span class="st"> </span><span class="kw">reduce</span>(smoke1, left_join, <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;ergoid&quot;</span>, <span class="st">&quot;rs_cohort&quot;</span>))
+rs1_smoke &lt;-<span class="st"> </span><span class="kw">reduce</span>(smoke1, left_join, <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;ergoid&quot;</span>, <span class="st">&quot;rs_cohort&quot;</span>))
 
 <span class="co">### Merge RS2</span>
 
 smoke2 &lt;-<span class="st"> </span><span class="kw">list</span>(smoke2_<span class="dv">1</span>, smoke2_<span class="dv">2</span>, smoke2_<span class="dv">3</span>, smoke2_<span class="dv">4</span>)
 
-rs2_smoke &lt;-<span class="st"> </span><span class="kw">reduce</span>(smoke2, left_join, <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;ergoid&quot;</span>, <span class="st">&quot;rs_cohort&quot;</span>))
+rs2_smoke &lt;-
+<span class="st">  </span><span class="kw">reduce</span>(smoke2, left_join, <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;ergoid&quot;</span>, <span class="st">&quot;rs_cohort&quot;</span>))
 
 <span class="co">### Merge RS3</span>
 
 rs3_smoke &lt;-<span class="st"> </span>smoke3_<span class="dv">1</span> <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">left_join</span>(smoke3_<span class="dv">2</span>, <span class="dt">by=</span> <span class="kw">c</span>(<span class="st">&quot;ergoid&quot;</span>, <span class="st">&quot;rs_cohort&quot;</span>))</code></pre>
+<span class="st">  </span><span class="kw">left_join</span>(smoke3_<span class="dv">2</span>, <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;ergoid&quot;</span>, <span class="st">&quot;rs_cohort&quot;</span>))</code></pre>
 <ol start="4" style="list-style-type: decimal">
 <li>Create variable smoke (0: never, 1: former, 2: current, NA) using the multiple questions related to smoking habits.</li>
 </ol>
-<pre class="sourceCode r"><code class="sourceCode r">rs1_smoke &lt;-<span class="st"> </span>rs1_smoke<span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">smoke1 =</span> <span class="kw">ifelse</span>((e1_ai7_<span class="dv">20</span> <span class="op">==</span><span class="st"> </span><span class="dv">0</span> <span class="op">&amp;</span><span class="st"> </span>e1_ai7_<span class="dv">30</span> <span class="op">==</span><span class="st"> </span><span class="dv">0</span>), <span class="dv">0</span>, <span class="ot">NA</span>),
-         <span class="dt">smoke1 =</span> <span class="kw">ifelse</span>((e1_ai7_<span class="dv">20</span> <span class="op">==</span><span class="st"> </span><span class="dv">0</span> <span class="op">&amp;</span><span class="st"> </span>e1_ai7_<span class="dv">30</span> <span class="op">==</span><span class="st"> </span><span class="dv">1</span>), <span class="dv">1</span>, smoke1),
-         <span class="dt">smoke1 =</span> <span class="kw">ifelse</span>(e1_ai7_<span class="dv">20</span> <span class="op">==</span><span class="st"> </span><span class="dv">1</span>, <span class="dv">2</span>, smoke1),
-         <span class="dt">smoke2 =</span> <span class="kw">ifelse</span>(e2_b0cg <span class="op">==</span><span class="st"> </span><span class="dv">3</span> <span class="op">&amp;</span><span class="st"> </span>e2_b0pi <span class="op">==</span><span class="st"> </span><span class="dv">3</span> <span class="op">&amp;</span><span class="st"> </span>e2_b0ct <span class="op">==</span><span class="st"> </span><span class="dv">3</span>, <span class="dv">0</span>, <span class="ot">NA</span>),
-         <span class="dt">smoke2 =</span> <span class="kw">ifelse</span>((e2_b0cg <span class="op">==</span><span class="st"> </span><span class="dv">2</span> <span class="op">|</span><span class="st"> </span>e2_b0pi <span class="op">==</span><span class="st"> </span><span class="dv">2</span> <span class="op">|</span><span class="st"> </span>e2_b0ct <span class="op">==</span><span class="st"> </span><span class="dv">2</span>), <span class="dv">1</span>, smoke2),
-         <span class="dt">smoke2 =</span> <span class="kw">ifelse</span>((e2_b0cg <span class="op">==</span><span class="st"> </span><span class="dv">1</span> <span class="op">|</span><span class="st"> </span>e2_b0pi <span class="op">==</span><span class="st"> </span><span class="dv">1</span> <span class="op">|</span><span class="st"> </span>e2_b0ct <span class="op">==</span><span class="st"> </span><span class="dv">1</span>), <span class="dv">2</span>, smoke2),
-         <span class="dt">smoke3 =</span> <span class="kw">ifelse</span>(e3_cicg <span class="op">==</span><span class="st"> </span><span class="dv">0</span> <span class="op">&amp;</span><span class="st"> </span>e3_cipi <span class="op">==</span><span class="st"> </span><span class="dv">0</span> <span class="op">&amp;</span><span class="st"> </span>e3_cict <span class="op">==</span><span class="st"> </span><span class="dv">0</span> <span class="op">&amp;</span><span class="st"> </span>e3_cictps <span class="op">==</span><span class="st"> </span><span class="dv">0</span>, <span class="dv">0</span>, <span class="ot">NA</span>),
-         <span class="dt">smoke3 =</span> <span class="kw">ifelse</span>((e3_cicg <span class="op">==</span><span class="st"> </span><span class="dv">1</span> <span class="op">|</span>e3_cipi <span class="op">==</span><span class="st"> </span><span class="dv">1</span> <span class="op">|</span>(e3_cict <span class="op">==</span><span class="st"> </span><span class="dv">0</span> <span class="op">&amp;</span><span class="st"> </span>e3_cictps <span class="op">==</span><span class="st"> </span><span class="dv">1</span>)), <span class="dv">1</span>, smoke3),
-         <span class="dt">smoke3 =</span> <span class="kw">ifelse</span>((e3_cicg <span class="op">==</span><span class="st"> </span><span class="dv">2</span> <span class="op">|</span>e3_cicg <span class="op">==</span><span class="st"> </span><span class="dv">3</span> <span class="op">|</span><span class="st"> </span>e3_cipi <span class="op">==</span><span class="st"> </span><span class="dv">2</span> <span class="op">|</span><span class="st"> </span>e3_cipi <span class="op">==</span><span class="st"> </span><span class="dv">3</span> <span class="op">|</span><span class="st"> </span>e3_cict <span class="op">==</span><span class="st"> </span><span class="dv">1</span>), <span class="dv">2</span>, smoke3),
-         <span class="dt">smoke4 =</span> <span class="kw">ifelse</span>(e4_dicg <span class="op">==</span><span class="st"> </span><span class="dv">0</span> <span class="op">&amp;</span><span class="st"> </span>e4_dipi <span class="op">==</span><span class="st"> </span><span class="dv">0</span> <span class="op">&amp;</span><span class="st"> </span>e4_dict <span class="op">==</span><span class="st"> </span><span class="dv">0</span>, <span class="dv">0</span>, <span class="ot">NA</span>),
-         <span class="dt">smoke4 =</span> <span class="kw">ifelse</span>((e4_dicg <span class="op">==</span><span class="st"> </span><span class="dv">1</span> <span class="op">|</span>e4_dipi <span class="op">==</span><span class="st"> </span><span class="dv">1</span> <span class="op">|</span><span class="st"> </span>e4_dict <span class="op">==</span><span class="st"> </span><span class="dv">2</span> <span class="op">|</span><span class="st"> </span>e4_dict <span class="op">==</span><span class="st"> </span><span class="dv">3</span>), <span class="dv">1</span>, smoke4),
-         <span class="dt">smoke4 =</span> <span class="kw">ifelse</span>((e4_dicg <span class="op">==</span><span class="st"> </span><span class="dv">2</span> <span class="op">|</span>e4_dicg <span class="op">==</span><span class="st"> </span><span class="dv">3</span> <span class="op">|</span><span class="st"> </span>e4_dipi <span class="op">==</span><span class="st"> </span><span class="dv">2</span> <span class="op">|</span><span class="st"> </span>e4_dipi <span class="op">==</span><span class="st"> </span><span class="dv">3</span> <span class="op">|</span><span class="st"> </span>e4_dict <span class="op">==</span><span class="st"> </span><span class="dv">1</span>), <span class="dv">2</span>, smoke4),
-         <span class="dt">smoke5 =</span> <span class="kw">ifelse</span>(e5_EILF6 <span class="op">==</span><span class="st"> </span><span class="dv">0</span> <span class="op">&amp;</span><span class="st"> </span>e5_EILFE <span class="op">==</span><span class="st"> </span><span class="dv">0</span> <span class="op">&amp;</span><span class="st"> </span>e5_EILF5 <span class="op">==</span><span class="st"> </span><span class="dv">0</span> <span class="op">&amp;</span><span class="st"> </span>e5_EILF4 <span class="op">==</span><span class="st"> </span><span class="dv">0</span>, <span class="dv">0</span>, <span class="ot">NA</span>), 
-         <span class="dt">smoke5 =</span> <span class="kw">ifelse</span>(((e5_EILF6 <span class="op">==</span><span class="st"> </span><span class="dv">0</span> <span class="op">&amp;</span><span class="st"> </span>e5_EILFE <span class="op">==</span><span class="st"> </span><span class="dv">1</span>)<span class="op">|</span><span class="st"> </span>e5_EILF5 <span class="op">==</span><span class="st"> </span><span class="dv">1</span> <span class="op">|</span><span class="st"> </span>e5_EILF4 <span class="op">==</span><span class="st"> </span><span class="dv">1</span> <span class="op">|</span><span class="st"> </span>e5_EILF4 <span class="op">==</span><span class="st"> </span><span class="dv">2</span> <span class="op">|</span><span class="st"> </span>e5_EILF4 <span class="op">==</span><span class="st"> </span><span class="dv">3</span>), <span class="dv">1</span>, smoke5),
-         <span class="dt">smoke5 =</span> <span class="kw">ifelse</span>((e5_EILF6 <span class="op">==</span><span class="st"> </span><span class="dv">1</span> <span class="op">|</span><span class="st"> </span>e5_EILF5 <span class="op">==</span><span class="st"> </span><span class="dv">2</span> <span class="op">|</span><span class="st"> </span>e5_EILF4 <span class="op">==</span><span class="st"> </span><span class="dv">4</span> <span class="op">|</span><span class="st"> </span>e5_EILF4 <span class="op">==</span><span class="st"> </span><span class="dv">5</span> <span class="op">|</span><span class="st"> </span>e5_EILF4 <span class="op">==</span><span class="st"> </span><span class="dv">6</span>), <span class="dv">2</span>, smoke5),
-         <span class="dt">smoke6 =</span> <span class="kw">ifelse</span>((e6_EILF6 <span class="op">==</span><span class="st"> </span><span class="dv">0</span> <span class="op">&amp;</span><span class="st"> </span>e6_EILSE5 <span class="op">==</span><span class="st"> </span><span class="dv">0</span> <span class="op">&amp;</span><span class="st"> </span>e6_EILF5 <span class="op">==</span><span class="st"> </span><span class="dv">0</span> <span class="op">&amp;</span><span class="st"> </span>e6_EILF4 <span class="op">==</span><span class="st"> </span><span class="dv">0</span>), <span class="dv">0</span>, <span class="ot">NA</span>),
-         <span class="dt">smoke6 =</span> <span class="kw">ifelse</span>(((e6_EILF6 <span class="op">==</span><span class="st"> </span><span class="dv">0</span> <span class="op">&amp;</span><span class="st"> </span>(e6_EILSE5 <span class="op">==</span><span class="st"> </span><span class="dv">1</span> <span class="op">|</span>e6_EILSE5 <span class="op">==</span><span class="st"> </span><span class="dv">2</span>))<span class="op">|</span><span class="st"> </span>e6_EILF5 <span class="op">==</span><span class="st"> </span><span class="dv">1</span> <span class="op">|</span><span class="st"> </span>e6_EILF4 <span class="op">==</span><span class="st"> </span><span class="dv">1</span> <span class="op">|</span><span class="st"> </span>e6_EILF4 <span class="op">==</span><span class="st"> </span><span class="dv">2</span> <span class="op">|</span><span class="st"> </span>e6_EILF4 <span class="op">==</span><span class="st"> </span><span class="dv">3</span>), <span class="dv">1</span>, smoke6),
-         <span class="dt">smoke6 =</span> <span class="kw">ifelse</span>((e6_EILF6 <span class="op">==</span><span class="st"> </span><span class="dv">1</span> <span class="op">|</span><span class="st"> </span>e6_EILF5 <span class="op">==</span><span class="st"> </span><span class="dv">2</span> <span class="op">|</span><span class="st"> </span>e6_EILF4 <span class="op">==</span><span class="st"> </span><span class="dv">4</span> <span class="op">|</span><span class="st"> </span>e6_EILF4 <span class="op">==</span><span class="st"> </span><span class="dv">5</span> <span class="op">|</span><span class="st"> </span>e6_EILF4 <span class="op">==</span><span class="st"> </span><span class="dv">6</span>), <span class="dv">2</span>, smoke6)) <span class="op">%&gt;%</span><span class="st"> </span>
+<pre class="sourceCode r"><code class="sourceCode r">rs1_smoke &lt;-<span class="st"> </span>rs1_smoke <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">mutate</span>(
+    <span class="dt">smoke1 =</span> <span class="kw">ifelse</span>((e1_ai7_<span class="dv">20</span> <span class="op">==</span><span class="st"> </span><span class="dv">0</span> <span class="op">&amp;</span><span class="st"> </span>e1_ai7_<span class="dv">30</span> <span class="op">==</span><span class="st"> </span><span class="dv">0</span>), <span class="dv">0</span>, <span class="ot">NA</span>),
+    <span class="dt">smoke1 =</span> <span class="kw">ifelse</span>((e1_ai7_<span class="dv">20</span> <span class="op">==</span><span class="st"> </span><span class="dv">0</span> <span class="op">&amp;</span>
+<span class="st">                       </span>e1_ai7_<span class="dv">30</span> <span class="op">==</span><span class="st"> </span><span class="dv">1</span>), <span class="dv">1</span>, smoke1),
+    <span class="dt">smoke1 =</span> <span class="kw">ifelse</span>(e1_ai7_<span class="dv">20</span> <span class="op">==</span><span class="st"> </span><span class="dv">1</span>, <span class="dv">2</span>, smoke1),
+    <span class="dt">smoke2 =</span> <span class="kw">ifelse</span>(e2_b0cg <span class="op">==</span><span class="st"> </span><span class="dv">3</span> <span class="op">&amp;</span>
+<span class="st">                      </span>e2_b0pi <span class="op">==</span><span class="st"> </span><span class="dv">3</span> <span class="op">&amp;</span><span class="st"> </span>e2_b0ct <span class="op">==</span><span class="st"> </span><span class="dv">3</span>, <span class="dv">0</span>, <span class="ot">NA</span>),
+    <span class="dt">smoke2 =</span> <span class="kw">ifelse</span>((e2_b0cg <span class="op">==</span><span class="st"> </span><span class="dv">2</span> <span class="op">|</span>
+<span class="st">                       </span>e2_b0pi <span class="op">==</span><span class="st"> </span><span class="dv">2</span> <span class="op">|</span><span class="st"> </span>e2_b0ct <span class="op">==</span><span class="st"> </span><span class="dv">2</span>), <span class="dv">1</span>, smoke2),
+    <span class="dt">smoke2 =</span> <span class="kw">ifelse</span>((e2_b0cg <span class="op">==</span><span class="st"> </span><span class="dv">1</span> <span class="op">|</span>
+<span class="st">                       </span>e2_b0pi <span class="op">==</span><span class="st"> </span><span class="dv">1</span> <span class="op">|</span><span class="st"> </span>e2_b0ct <span class="op">==</span><span class="st"> </span><span class="dv">1</span>), <span class="dv">2</span>, smoke2),
+    <span class="dt">smoke3 =</span> <span class="kw">ifelse</span>(e3_cicg <span class="op">==</span><span class="st"> </span><span class="dv">0</span> <span class="op">&amp;</span>
+<span class="st">                      </span>e3_cipi <span class="op">==</span><span class="st"> </span><span class="dv">0</span> <span class="op">&amp;</span><span class="st"> </span>e3_cict <span class="op">==</span><span class="st"> </span><span class="dv">0</span> <span class="op">&amp;</span><span class="st"> </span>e3_cictps <span class="op">==</span><span class="st"> </span><span class="dv">0</span>, <span class="dv">0</span>, <span class="ot">NA</span>),
+    <span class="dt">smoke3 =</span> <span class="kw">ifelse</span>((
+      e3_cicg <span class="op">==</span><span class="st"> </span><span class="dv">1</span> <span class="op">|</span>
+<span class="st">        </span>e3_cipi <span class="op">==</span><span class="st"> </span><span class="dv">1</span> <span class="op">|</span><span class="st"> </span>(e3_cict <span class="op">==</span><span class="st"> </span><span class="dv">0</span> <span class="op">&amp;</span><span class="st"> </span>e3_cictps <span class="op">==</span><span class="st"> </span><span class="dv">1</span>)
+    ), <span class="dv">1</span>, smoke3),
+    <span class="dt">smoke3 =</span> <span class="kw">ifelse</span>((e3_cicg <span class="op">==</span><span class="st"> </span><span class="dv">2</span> <span class="op">|</span>
+<span class="st">                       </span>e3_cicg <span class="op">==</span><span class="st"> </span><span class="dv">3</span> <span class="op">|</span>
+<span class="st">                       </span>e3_cipi <span class="op">==</span><span class="st"> </span><span class="dv">2</span> <span class="op">|</span><span class="st"> </span>e3_cipi <span class="op">==</span><span class="st"> </span><span class="dv">3</span> <span class="op">|</span><span class="st"> </span>e3_cict <span class="op">==</span><span class="st"> </span><span class="dv">1</span>),
+                    <span class="dv">2</span>,
+                    smoke3
+    ),
+    <span class="dt">smoke4 =</span> <span class="kw">ifelse</span>(e4_dicg <span class="op">==</span><span class="st"> </span><span class="dv">0</span> <span class="op">&amp;</span>
+<span class="st">                      </span>e4_dipi <span class="op">==</span><span class="st"> </span><span class="dv">0</span> <span class="op">&amp;</span><span class="st"> </span>e4_dict <span class="op">==</span><span class="st"> </span><span class="dv">0</span>, <span class="dv">0</span>, <span class="ot">NA</span>),
+    <span class="dt">smoke4 =</span> <span class="kw">ifelse</span>((
+      e4_dicg <span class="op">==</span><span class="st"> </span><span class="dv">1</span> <span class="op">|</span>
+<span class="st">        </span>e4_dipi <span class="op">==</span><span class="st"> </span><span class="dv">1</span> <span class="op">|</span><span class="st"> </span>e4_dict <span class="op">==</span><span class="st"> </span><span class="dv">2</span> <span class="op">|</span><span class="st"> </span>e4_dict <span class="op">==</span><span class="st"> </span><span class="dv">3</span>
+    ), <span class="dv">1</span>, smoke4),
+    <span class="dt">smoke4 =</span> <span class="kw">ifelse</span>((e4_dicg <span class="op">==</span><span class="st"> </span><span class="dv">2</span> <span class="op">|</span>
+<span class="st">                       </span>e4_dicg <span class="op">==</span><span class="st"> </span><span class="dv">3</span> <span class="op">|</span>
+<span class="st">                       </span>e4_dipi <span class="op">==</span><span class="st"> </span><span class="dv">2</span> <span class="op">|</span><span class="st"> </span>e4_dipi <span class="op">==</span><span class="st"> </span><span class="dv">3</span> <span class="op">|</span><span class="st"> </span>e4_dict <span class="op">==</span><span class="st"> </span><span class="dv">1</span>),
+                    <span class="dv">2</span>,
+                    smoke4
+    ),
+    <span class="dt">smoke5 =</span> <span class="kw">ifelse</span>(e5_EILF6 <span class="op">==</span><span class="st"> </span><span class="dv">0</span> <span class="op">&amp;</span>
+<span class="st">                      </span>e5_EILFE <span class="op">==</span><span class="st"> </span><span class="dv">0</span> <span class="op">&amp;</span><span class="st"> </span>e5_EILF5 <span class="op">==</span><span class="st"> </span><span class="dv">0</span> <span class="op">&amp;</span><span class="st"> </span>e5_EILF4 <span class="op">==</span><span class="st"> </span><span class="dv">0</span>, <span class="dv">0</span>, <span class="ot">NA</span>),
+    <span class="dt">smoke5 =</span> <span class="kw">ifelse</span>(((e5_EILF6 <span class="op">==</span><span class="st"> </span><span class="dv">0</span> <span class="op">&amp;</span>
+<span class="st">                        </span>e5_EILFE <span class="op">==</span><span class="st"> </span><span class="dv">1</span>) <span class="op">|</span>
+<span class="st">                       </span>e5_EILF5 <span class="op">==</span><span class="st"> </span><span class="dv">1</span> <span class="op">|</span>
+<span class="st">                       </span>e5_EILF4 <span class="op">==</span><span class="st"> </span><span class="dv">1</span> <span class="op">|</span><span class="st"> </span>e5_EILF4 <span class="op">==</span><span class="st"> </span><span class="dv">2</span> <span class="op">|</span><span class="st"> </span>e5_EILF4 <span class="op">==</span><span class="st"> </span><span class="dv">3</span>
+    ),
+    <span class="dv">1</span>,
+    smoke5
+    ),
+    <span class="dt">smoke5 =</span> <span class="kw">ifelse</span>((
+      e5_EILF6 <span class="op">==</span><span class="st"> </span><span class="dv">1</span> <span class="op">|</span>
+<span class="st">        </span>e5_EILF5 <span class="op">==</span><span class="st"> </span><span class="dv">2</span> <span class="op">|</span>
+<span class="st">        </span>e5_EILF4 <span class="op">==</span><span class="st"> </span><span class="dv">4</span> <span class="op">|</span><span class="st"> </span>e5_EILF4 <span class="op">==</span><span class="st"> </span><span class="dv">5</span> <span class="op">|</span><span class="st"> </span>e5_EILF4 <span class="op">==</span><span class="st"> </span><span class="dv">6</span>
+    ),
+    <span class="dv">2</span>,
+    smoke5
+    ),
+    <span class="dt">smoke6 =</span> <span class="kw">ifelse</span>((
+      e6_EILF6 <span class="op">==</span><span class="st"> </span><span class="dv">0</span> <span class="op">&amp;</span>
+<span class="st">        </span>e6_EILSE5 <span class="op">==</span><span class="st"> </span><span class="dv">0</span> <span class="op">&amp;</span><span class="st"> </span>e6_EILF5 <span class="op">==</span><span class="st"> </span><span class="dv">0</span> <span class="op">&amp;</span><span class="st"> </span>e6_EILF4 <span class="op">==</span><span class="st"> </span><span class="dv">0</span>
+    ), <span class="dv">0</span>, <span class="ot">NA</span>),
+    <span class="dt">smoke6 =</span> <span class="kw">ifelse</span>(((e6_EILF6 <span class="op">==</span><span class="st"> </span><span class="dv">0</span> <span class="op">&amp;</span>
+<span class="st">                        </span>(e6_EILSE5 <span class="op">==</span><span class="st"> </span><span class="dv">1</span> <span class="op">|</span>
+<span class="st">                           </span>e6_EILSE5 <span class="op">==</span><span class="st"> </span><span class="dv">2</span>)) <span class="op">|</span>
+<span class="st">                       </span>e6_EILF5 <span class="op">==</span><span class="st"> </span><span class="dv">1</span> <span class="op">|</span>
+<span class="st">                       </span>e6_EILF4 <span class="op">==</span><span class="st"> </span><span class="dv">1</span> <span class="op">|</span><span class="st"> </span>e6_EILF4 <span class="op">==</span><span class="st"> </span><span class="dv">2</span> <span class="op">|</span><span class="st"> </span>e6_EILF4 <span class="op">==</span><span class="st"> </span><span class="dv">3</span>
+    ),
+    <span class="dv">1</span>,
+    smoke6
+    ),
+    <span class="dt">smoke6 =</span> <span class="kw">ifelse</span>((
+      e6_EILF6 <span class="op">==</span><span class="st"> </span><span class="dv">1</span> <span class="op">|</span>
+<span class="st">        </span>e6_EILF5 <span class="op">==</span><span class="st"> </span><span class="dv">2</span> <span class="op">|</span>
+<span class="st">        </span>e6_EILF4 <span class="op">==</span><span class="st"> </span><span class="dv">4</span> <span class="op">|</span><span class="st"> </span>e6_EILF4 <span class="op">==</span><span class="st"> </span><span class="dv">5</span> <span class="op">|</span><span class="st"> </span>e6_EILF4 <span class="op">==</span><span class="st"> </span><span class="dv">6</span>
+    ),
+    <span class="dv">2</span>,
+    smoke6
+    )
+  ) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">select</span>(ergoid, smoke1, smoke2, smoke3, smoke4, smoke5)
 
-rs2_smoke &lt;-<span class="st"> </span>rs2_smoke<span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">smoke3 =</span> <span class="kw">ifelse</span>(ep_lf4 <span class="op">==</span><span class="st"> </span><span class="dv">0</span> <span class="op">&amp;</span><span class="st"> </span>ep_lf5 <span class="op">==</span><span class="st"> </span><span class="dv">0</span> <span class="op">&amp;</span><span class="st"> </span>ep_lf6 <span class="op">==</span><span class="st"> </span><span class="dv">0</span> <span class="op">&amp;</span><span class="st"> </span>ep_lf6e <span class="op">==</span><span class="st"> </span><span class="dv">0</span>, <span class="dv">0</span>, <span class="ot">NA</span>),
-         <span class="dt">smoke3 =</span> <span class="kw">ifelse</span>((ep_lf4 <span class="op">==</span><span class="st"> </span><span class="dv">1</span> <span class="op">|</span><span class="st"> </span>ep_lf5 <span class="op">==</span><span class="st"> </span><span class="dv">1</span> <span class="op">|</span><span class="st"> </span>(ep_lf6 <span class="op">==</span><span class="st"> </span><span class="dv">0</span> <span class="op">&amp;</span><span class="st"> </span>ep_lf6e <span class="op">==</span><span class="st"> </span><span class="dv">1</span>)), <span class="dv">1</span>, smoke3),
-         <span class="dt">smoke3 =</span> <span class="kw">ifelse</span>((ep_lf4 <span class="op">==</span><span class="st"> </span><span class="dv">2</span> <span class="op">|</span><span class="st"> </span>ep_lf5 <span class="op">==</span><span class="st"> </span><span class="dv">2</span> <span class="op">|</span><span class="st"> </span>ep_lf6 <span class="op">==</span><span class="st"> </span><span class="dv">1</span>), <span class="dv">2</span>, smoke3),
-         <span class="dt">smoke4 =</span> <span class="kw">ifelse</span>(e4_dicg <span class="op">==</span><span class="st"> </span><span class="dv">0</span> <span class="op">&amp;</span><span class="st"> </span>e4_dipi <span class="op">==</span><span class="st"> </span><span class="dv">0</span> <span class="op">&amp;</span><span class="st"> </span>e4_dict <span class="op">==</span><span class="st"> </span><span class="dv">0</span>, <span class="dv">0</span>, <span class="ot">NA</span>), 
-         <span class="dt">smoke4 =</span> <span class="kw">ifelse</span>((e4_dicg <span class="op">==</span><span class="st"> </span><span class="dv">1</span> <span class="op">|</span>e4_dipi <span class="op">==</span><span class="st"> </span><span class="dv">1</span> <span class="op">|</span><span class="st"> </span>e4_dict <span class="op">==</span><span class="st"> </span><span class="dv">2</span> <span class="op">|</span><span class="st"> </span>e4_dict <span class="op">==</span><span class="st"> </span><span class="dv">3</span>), <span class="dv">1</span>, smoke4), 
-         <span class="dt">smoke4 =</span> <span class="kw">ifelse</span>((e4_dicg <span class="op">==</span><span class="st"> </span><span class="dv">2</span> <span class="op">|</span>e4_dicg <span class="op">==</span><span class="st"> </span><span class="dv">3</span> <span class="op">|</span><span class="st"> </span>e4_dipi <span class="op">==</span><span class="st"> </span><span class="dv">2</span> <span class="op">|</span><span class="st"> </span>e4_dipi <span class="op">==</span><span class="st"> </span><span class="dv">3</span> <span class="op">|</span><span class="st"> </span>e4_dict <span class="op">==</span><span class="st"> </span><span class="dv">1</span>), <span class="dv">2</span>, smoke4),
-         <span class="dt">smoke5 =</span> <span class="kw">ifelse</span>(e5_EILF6 <span class="op">==</span><span class="st"> </span><span class="dv">0</span> <span class="op">&amp;</span><span class="st"> </span>e5_EILFE <span class="op">==</span><span class="st"> </span><span class="dv">0</span> <span class="op">&amp;</span><span class="st"> </span>e5_EILF5 <span class="op">==</span><span class="st"> </span><span class="dv">0</span> <span class="op">&amp;</span><span class="st"> </span>e5_EILF4 <span class="op">==</span><span class="st"> </span><span class="dv">0</span>, <span class="dv">0</span>, <span class="ot">NA</span>), 
-         <span class="dt">smoke5 =</span> <span class="kw">ifelse</span>(((e5_EILF6 <span class="op">==</span><span class="st"> </span><span class="dv">0</span> <span class="op">&amp;</span><span class="st"> </span>e5_EILFE <span class="op">==</span><span class="st"> </span><span class="dv">1</span>)<span class="op">|</span><span class="st"> </span>e5_EILF5 <span class="op">==</span><span class="st"> </span><span class="dv">1</span> <span class="op">|</span><span class="st"> </span>e5_EILF4 <span class="op">==</span><span class="st"> </span><span class="dv">1</span> <span class="op">|</span><span class="st"> </span>e5_EILF4 <span class="op">==</span><span class="st"> </span><span class="dv">2</span> <span class="op">|</span><span class="st"> </span>e5_EILF4 <span class="op">==</span><span class="st"> </span><span class="dv">3</span>), <span class="dv">1</span>, smoke5),
-         <span class="dt">smoke5 =</span> <span class="kw">ifelse</span>((e5_EILF6 <span class="op">==</span><span class="st"> </span><span class="dv">1</span> <span class="op">|</span><span class="st"> </span>e5_EILF5 <span class="op">==</span><span class="st"> </span><span class="dv">1</span> <span class="op">|</span><span class="st"> </span>e5_EILF4 <span class="op">==</span><span class="st"> </span><span class="dv">4</span> <span class="op">|</span><span class="st"> </span>e5_EILF4 <span class="op">==</span><span class="st"> </span><span class="dv">5</span> <span class="op">|</span><span class="st"> </span>e5_EILF4 <span class="op">==</span><span class="st"> </span><span class="dv">6</span>), <span class="dv">2</span>, smoke5),
-         <span class="dt">smoke6 =</span> <span class="kw">ifelse</span>(e6_EILF6 <span class="op">==</span><span class="st"> </span><span class="dv">0</span> <span class="op">&amp;</span><span class="st"> </span>e6_EILSE5 <span class="op">==</span><span class="st"> </span><span class="dv">0</span> <span class="op">&amp;</span><span class="st"> </span>e6_EILF5 <span class="op">==</span><span class="st"> </span><span class="dv">0</span> <span class="op">&amp;</span><span class="st"> </span>e6_EILF4 <span class="op">==</span><span class="st"> </span><span class="dv">0</span>, <span class="dv">0</span>, <span class="ot">NA</span>),
-         <span class="dt">smoke6 =</span> <span class="kw">ifelse</span>(((e6_EILF6 <span class="op">==</span><span class="st"> </span><span class="dv">0</span> <span class="op">&amp;</span><span class="st"> </span>(e6_EILSE5 <span class="op">==</span><span class="st"> </span><span class="dv">1</span> <span class="op">|</span>e6_EILSE5 <span class="op">==</span><span class="st"> </span><span class="dv">2</span>))<span class="op">|</span><span class="st"> </span>e6_EILF5 <span class="op">==</span><span class="st"> </span><span class="dv">1</span> <span class="op">|</span><span class="st"> </span>e6_EILF4 <span class="op">==</span><span class="st"> </span><span class="dv">1</span> <span class="op">|</span><span class="st"> </span>e6_EILF4 <span class="op">==</span><span class="st"> </span><span class="dv">2</span> <span class="op">|</span><span class="st"> </span>e6_EILF4 <span class="op">==</span><span class="st"> </span><span class="dv">3</span>), <span class="dv">1</span>, smoke6),
-         <span class="dt">smoke6 =</span> <span class="kw">ifelse</span>((e6_EILF6 <span class="op">==</span><span class="st"> </span><span class="dv">1</span> <span class="op">|</span><span class="st"> </span>e6_EILF5 <span class="op">==</span><span class="st"> </span><span class="dv">2</span> <span class="op">|</span><span class="st"> </span>e6_EILF4 <span class="op">==</span><span class="st"> </span><span class="dv">4</span> <span class="op">|</span><span class="st"> </span>e6_EILF4 <span class="op">==</span><span class="st"> </span><span class="dv">5</span> <span class="op">|</span><span class="st"> </span>e6_EILF4 <span class="op">==</span><span class="st"> </span><span class="dv">6</span>), <span class="dv">2</span>, smoke6)) <span class="op">%&gt;%</span>
+rs2_smoke &lt;-<span class="st"> </span>rs2_smoke <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">mutate</span>(
+    <span class="dt">smoke3 =</span> <span class="kw">ifelse</span>(ep_lf4 <span class="op">==</span><span class="st"> </span><span class="dv">0</span> <span class="op">&amp;</span>
+<span class="st">                      </span>ep_lf5 <span class="op">==</span><span class="st"> </span><span class="dv">0</span> <span class="op">&amp;</span><span class="st"> </span>ep_lf6 <span class="op">==</span><span class="st"> </span><span class="dv">0</span> <span class="op">&amp;</span><span class="st"> </span>ep_lf6e <span class="op">==</span><span class="st"> </span><span class="dv">0</span>, <span class="dv">0</span>, <span class="ot">NA</span>),
+    <span class="dt">smoke3 =</span> <span class="kw">ifelse</span>((
+      ep_lf4 <span class="op">==</span><span class="st"> </span><span class="dv">1</span> <span class="op">|</span>
+<span class="st">        </span>ep_lf5 <span class="op">==</span><span class="st"> </span><span class="dv">1</span> <span class="op">|</span><span class="st"> </span>(ep_lf6 <span class="op">==</span><span class="st"> </span><span class="dv">0</span> <span class="op">&amp;</span><span class="st"> </span>ep_lf6e <span class="op">==</span><span class="st"> </span><span class="dv">1</span>)
+    ), <span class="dv">1</span>, smoke3),
+    <span class="dt">smoke3 =</span> <span class="kw">ifelse</span>((ep_lf4 <span class="op">==</span><span class="st"> </span><span class="dv">2</span> <span class="op">|</span>
+<span class="st">                       </span>ep_lf5 <span class="op">==</span><span class="st"> </span><span class="dv">2</span> <span class="op">|</span><span class="st"> </span>ep_lf6 <span class="op">==</span><span class="st"> </span><span class="dv">1</span>), <span class="dv">2</span>, smoke3),
+    <span class="dt">smoke4 =</span> <span class="kw">ifelse</span>(e4_dicg <span class="op">==</span><span class="st"> </span><span class="dv">0</span> <span class="op">&amp;</span>
+<span class="st">                      </span>e4_dipi <span class="op">==</span><span class="st"> </span><span class="dv">0</span> <span class="op">&amp;</span><span class="st"> </span>e4_dict <span class="op">==</span><span class="st"> </span><span class="dv">0</span>, <span class="dv">0</span>, <span class="ot">NA</span>),
+    <span class="dt">smoke4 =</span> <span class="kw">ifelse</span>((
+      e4_dicg <span class="op">==</span><span class="st"> </span><span class="dv">1</span> <span class="op">|</span>
+<span class="st">        </span>e4_dipi <span class="op">==</span><span class="st"> </span><span class="dv">1</span> <span class="op">|</span><span class="st"> </span>e4_dict <span class="op">==</span><span class="st"> </span><span class="dv">2</span> <span class="op">|</span><span class="st"> </span>e4_dict <span class="op">==</span><span class="st"> </span><span class="dv">3</span>
+    ), <span class="dv">1</span>, smoke4),
+    <span class="dt">smoke4 =</span> <span class="kw">ifelse</span>((e4_dicg <span class="op">==</span><span class="st"> </span><span class="dv">2</span> <span class="op">|</span>
+<span class="st">                       </span>e4_dicg <span class="op">==</span><span class="st"> </span><span class="dv">3</span> <span class="op">|</span>
+<span class="st">                       </span>e4_dipi <span class="op">==</span><span class="st"> </span><span class="dv">2</span> <span class="op">|</span><span class="st"> </span>e4_dipi <span class="op">==</span><span class="st"> </span><span class="dv">3</span> <span class="op">|</span><span class="st"> </span>e4_dict <span class="op">==</span><span class="st"> </span><span class="dv">1</span>),
+                    <span class="dv">2</span>,
+                    smoke4
+    ),
+    <span class="dt">smoke5 =</span> <span class="kw">ifelse</span>(e5_EILF6 <span class="op">==</span><span class="st"> </span><span class="dv">0</span> <span class="op">&amp;</span>
+<span class="st">                      </span>e5_EILFE <span class="op">==</span><span class="st"> </span><span class="dv">0</span> <span class="op">&amp;</span><span class="st"> </span>e5_EILF5 <span class="op">==</span><span class="st"> </span><span class="dv">0</span> <span class="op">&amp;</span><span class="st"> </span>e5_EILF4 <span class="op">==</span><span class="st"> </span><span class="dv">0</span>, <span class="dv">0</span>, <span class="ot">NA</span>),
+    <span class="dt">smoke5 =</span> <span class="kw">ifelse</span>(((e5_EILF6 <span class="op">==</span><span class="st"> </span><span class="dv">0</span> <span class="op">&amp;</span>
+<span class="st">                        </span>e5_EILFE <span class="op">==</span><span class="st"> </span><span class="dv">1</span>) <span class="op">|</span>
+<span class="st">                       </span>e5_EILF5 <span class="op">==</span><span class="st"> </span><span class="dv">1</span> <span class="op">|</span>
+<span class="st">                       </span>e5_EILF4 <span class="op">==</span><span class="st"> </span><span class="dv">1</span> <span class="op">|</span><span class="st"> </span>e5_EILF4 <span class="op">==</span><span class="st"> </span><span class="dv">2</span> <span class="op">|</span><span class="st"> </span>e5_EILF4 <span class="op">==</span><span class="st"> </span><span class="dv">3</span>
+    ),
+    <span class="dv">1</span>,
+    smoke5
+    ),
+    <span class="dt">smoke5 =</span> <span class="kw">ifelse</span>((
+      e5_EILF6 <span class="op">==</span><span class="st"> </span><span class="dv">1</span> <span class="op">|</span>
+<span class="st">        </span>e5_EILF5 <span class="op">==</span><span class="st"> </span><span class="dv">1</span> <span class="op">|</span>
+<span class="st">        </span>e5_EILF4 <span class="op">==</span><span class="st"> </span><span class="dv">4</span> <span class="op">|</span><span class="st"> </span>e5_EILF4 <span class="op">==</span><span class="st"> </span><span class="dv">5</span> <span class="op">|</span><span class="st"> </span>e5_EILF4 <span class="op">==</span><span class="st"> </span><span class="dv">6</span>
+    ),
+    <span class="dv">2</span>,
+    smoke5
+    ),
+    <span class="dt">smoke6 =</span> <span class="kw">ifelse</span>(e6_EILF6 <span class="op">==</span><span class="st"> </span><span class="dv">0</span> <span class="op">&amp;</span>
+<span class="st">                      </span>e6_EILSE5 <span class="op">==</span><span class="st"> </span><span class="dv">0</span> <span class="op">&amp;</span><span class="st"> </span>e6_EILF5 <span class="op">==</span><span class="st"> </span><span class="dv">0</span> <span class="op">&amp;</span><span class="st"> </span>e6_EILF4 <span class="op">==</span><span class="st"> </span><span class="dv">0</span>, <span class="dv">0</span>, <span class="ot">NA</span>),
+    <span class="dt">smoke6 =</span> <span class="kw">ifelse</span>(((e6_EILF6 <span class="op">==</span><span class="st"> </span><span class="dv">0</span> <span class="op">&amp;</span>
+<span class="st">                        </span>(e6_EILSE5 <span class="op">==</span><span class="st"> </span><span class="dv">1</span> <span class="op">|</span>
+<span class="st">                           </span>e6_EILSE5 <span class="op">==</span><span class="st"> </span><span class="dv">2</span>)) <span class="op">|</span>
+<span class="st">                       </span>e6_EILF5 <span class="op">==</span><span class="st"> </span><span class="dv">1</span> <span class="op">|</span>
+<span class="st">                       </span>e6_EILF4 <span class="op">==</span><span class="st"> </span><span class="dv">1</span> <span class="op">|</span><span class="st"> </span>e6_EILF4 <span class="op">==</span><span class="st"> </span><span class="dv">2</span> <span class="op">|</span><span class="st"> </span>e6_EILF4 <span class="op">==</span><span class="st"> </span><span class="dv">3</span>
+    ),
+    <span class="dv">1</span>,
+    smoke6
+    ),
+    <span class="dt">smoke6 =</span> <span class="kw">ifelse</span>((
+      e6_EILF6 <span class="op">==</span><span class="st"> </span><span class="dv">1</span> <span class="op">|</span>
+<span class="st">        </span>e6_EILF5 <span class="op">==</span><span class="st"> </span><span class="dv">2</span> <span class="op">|</span>
+<span class="st">        </span>e6_EILF4 <span class="op">==</span><span class="st"> </span><span class="dv">4</span> <span class="op">|</span><span class="st"> </span>e6_EILF4 <span class="op">==</span><span class="st"> </span><span class="dv">5</span> <span class="op">|</span><span class="st"> </span>e6_EILF4 <span class="op">==</span><span class="st"> </span><span class="dv">6</span>
+    ),
+    <span class="dv">2</span>,
+    smoke6
+    )
+  ) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">select</span>(ergoid, rs_cohort, smoke3, smoke4, smoke5, smoke6)
-  
-  
-rs3_smoke &lt;-<span class="st"> </span>rs3_smoke<span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">smoke4 =</span> <span class="kw">ifelse</span>(ej_yilf4 <span class="op">==</span><span class="st"> </span><span class="dv">0</span> <span class="op">&amp;</span><span class="st"> </span>ej_yilf5 <span class="op">==</span><span class="st"> </span><span class="dv">0</span> <span class="op">&amp;</span><span class="st"> </span>ej_yilf6 <span class="op">==</span><span class="st"> </span><span class="dv">0</span> <span class="op">&amp;</span><span class="st"> </span>ej_yilfe <span class="op">==</span><span class="st"> </span><span class="dv">0</span>, <span class="dv">0</span>, <span class="ot">NA</span>),
-         <span class="dt">smoke4 =</span> <span class="kw">ifelse</span>((ej_yilf4 <span class="op">==</span><span class="st"> </span><span class="dv">1</span> <span class="op">|</span><span class="st"> </span>ej_yilf4 <span class="op">==</span><span class="st"> </span><span class="dv">2</span> <span class="op">|</span><span class="st"> </span>ej_yilf4 <span class="op">==</span><span class="st"> </span><span class="dv">3</span> <span class="op">|</span><span class="st"> </span>ej_yilf5 <span class="op">==</span><span class="st"> </span><span class="dv">1</span> <span class="op">|</span><span class="st"> </span>(ej_yilf6 <span class="op">==</span><span class="st"> </span><span class="dv">0</span> <span class="op">&amp;</span><span class="st"> </span>ej_yilfe <span class="op">==</span><span class="st"> </span><span class="dv">1</span>)), <span class="dv">1</span>, smoke4),
-         <span class="dt">smoke4 =</span> <span class="kw">ifelse</span>((ej_yilf4 <span class="op">==</span><span class="st"> </span><span class="dv">4</span> <span class="op">|</span><span class="st"> </span>ej_yilf4 <span class="op">==</span><span class="st"> </span><span class="dv">5</span> <span class="op">|</span><span class="st"> </span>ej_yilf4 <span class="op">==</span><span class="st"> </span><span class="dv">6</span> <span class="op">|</span><span class="st"> </span>ej_yilf5 <span class="op">==</span><span class="st"> </span><span class="dv">2</span> <span class="op">|</span><span class="st"> </span>ej_yilf6 <span class="op">==</span><span class="st"> </span><span class="dv">1</span>), <span class="dv">2</span>, smoke4),
-         <span class="dt">smoke5 =</span> <span class="kw">ifelse</span>(e5_EILF6 <span class="op">==</span><span class="st"> </span><span class="dv">0</span> <span class="op">&amp;</span><span class="st"> </span>e5_EILFE <span class="op">==</span><span class="st"> </span><span class="dv">0</span> <span class="op">&amp;</span><span class="st"> </span>e5_EILF5 <span class="op">==</span><span class="st"> </span><span class="dv">0</span> <span class="op">&amp;</span><span class="st"> </span>e5_EILF4 <span class="op">==</span><span class="st"> </span><span class="dv">0</span>, <span class="dv">0</span>, <span class="ot">NA</span>),
-         <span class="dt">smoke5 =</span> <span class="kw">ifelse</span>(((e5_EILF6 <span class="op">==</span><span class="st"> </span><span class="dv">0</span> <span class="op">&amp;</span><span class="st"> </span>e5_EILFE <span class="op">==</span><span class="st"> </span><span class="dv">1</span>)<span class="op">|</span><span class="st"> </span>e5_EILF5 <span class="op">==</span><span class="st"> </span><span class="dv">1</span> <span class="op">|</span><span class="st"> </span>e5_EILF4 <span class="op">==</span><span class="st"> </span><span class="dv">1</span> <span class="op">|</span><span class="st"> </span>e5_EILF4 <span class="op">==</span><span class="st"> </span><span class="dv">2</span> <span class="op">|</span><span class="st"> </span>e5_EILF4 <span class="op">==</span><span class="st"> </span><span class="dv">3</span>), <span class="dv">1</span>, smoke5),
-         <span class="dt">smoke5 =</span> <span class="kw">ifelse</span>((e5_EILF6 <span class="op">==</span><span class="st"> </span><span class="dv">1</span> <span class="op">|</span><span class="st"> </span>e5_EILF5 <span class="op">==</span><span class="st"> </span><span class="dv">1</span> <span class="op">|</span><span class="st"> </span>e5_EILF4 <span class="op">==</span><span class="st"> </span><span class="dv">4</span> <span class="op">|</span><span class="st"> </span>e5_EILF4 <span class="op">==</span><span class="st"> </span><span class="dv">5</span> <span class="op">|</span><span class="st"> </span>e5_EILF4 <span class="op">==</span><span class="st"> </span><span class="dv">6</span>), <span class="dv">2</span>, smoke5)) <span class="op">%&gt;%</span><span class="st"> </span>
+
+
+rs3_smoke &lt;-<span class="st"> </span>rs3_smoke <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">mutate</span>(
+    <span class="dt">smoke4 =</span> <span class="kw">ifelse</span>(ej_yilf4 <span class="op">==</span><span class="st"> </span><span class="dv">0</span> <span class="op">&amp;</span>
+<span class="st">                      </span>ej_yilf5 <span class="op">==</span><span class="st"> </span><span class="dv">0</span> <span class="op">&amp;</span><span class="st"> </span>ej_yilf6 <span class="op">==</span><span class="st"> </span><span class="dv">0</span> <span class="op">&amp;</span><span class="st"> </span>ej_yilfe <span class="op">==</span><span class="st"> </span><span class="dv">0</span>, <span class="dv">0</span>, <span class="ot">NA</span>),
+    <span class="dt">smoke4 =</span> <span class="kw">ifelse</span>((
+      ej_yilf4 <span class="op">==</span><span class="st"> </span><span class="dv">1</span> <span class="op">|</span>
+<span class="st">        </span>ej_yilf4 <span class="op">==</span><span class="st"> </span><span class="dv">2</span> <span class="op">|</span>
+<span class="st">        </span>ej_yilf4 <span class="op">==</span><span class="st"> </span><span class="dv">3</span> <span class="op">|</span>
+<span class="st">        </span>ej_yilf5 <span class="op">==</span><span class="st"> </span><span class="dv">1</span> <span class="op">|</span><span class="st"> </span>(ej_yilf6 <span class="op">==</span><span class="st"> </span><span class="dv">0</span> <span class="op">&amp;</span><span class="st"> </span>ej_yilfe <span class="op">==</span><span class="st"> </span><span class="dv">1</span>)
+    ),
+    <span class="dv">1</span>,
+    smoke4
+    ),
+    <span class="dt">smoke4 =</span> <span class="kw">ifelse</span>((
+      ej_yilf4 <span class="op">==</span><span class="st"> </span><span class="dv">4</span> <span class="op">|</span>
+<span class="st">        </span>ej_yilf4 <span class="op">==</span><span class="st"> </span><span class="dv">5</span> <span class="op">|</span>
+<span class="st">        </span>ej_yilf4 <span class="op">==</span><span class="st"> </span><span class="dv">6</span> <span class="op">|</span><span class="st"> </span>ej_yilf5 <span class="op">==</span><span class="st"> </span><span class="dv">2</span> <span class="op">|</span><span class="st"> </span>ej_yilf6 <span class="op">==</span><span class="st"> </span><span class="dv">1</span>
+    ),
+    <span class="dv">2</span>,
+    smoke4
+    ),
+    <span class="dt">smoke5 =</span> <span class="kw">ifelse</span>(e5_EILF6 <span class="op">==</span><span class="st"> </span><span class="dv">0</span> <span class="op">&amp;</span>
+<span class="st">                      </span>e5_EILFE <span class="op">==</span><span class="st"> </span><span class="dv">0</span> <span class="op">&amp;</span><span class="st"> </span>e5_EILF5 <span class="op">==</span><span class="st"> </span><span class="dv">0</span> <span class="op">&amp;</span><span class="st"> </span>e5_EILF4 <span class="op">==</span><span class="st"> </span><span class="dv">0</span>, <span class="dv">0</span>, <span class="ot">NA</span>),
+    <span class="dt">smoke5 =</span> <span class="kw">ifelse</span>(((e5_EILF6 <span class="op">==</span><span class="st"> </span><span class="dv">0</span> <span class="op">&amp;</span>
+<span class="st">                        </span>e5_EILFE <span class="op">==</span><span class="st"> </span><span class="dv">1</span>) <span class="op">|</span>
+<span class="st">                       </span>e5_EILF5 <span class="op">==</span><span class="st"> </span><span class="dv">1</span> <span class="op">|</span>
+<span class="st">                       </span>e5_EILF4 <span class="op">==</span><span class="st"> </span><span class="dv">1</span> <span class="op">|</span><span class="st"> </span>e5_EILF4 <span class="op">==</span><span class="st"> </span><span class="dv">2</span> <span class="op">|</span><span class="st"> </span>e5_EILF4 <span class="op">==</span><span class="st"> </span><span class="dv">3</span>
+    ),
+    <span class="dv">1</span>,
+    smoke5
+    ),
+    <span class="dt">smoke5 =</span> <span class="kw">ifelse</span>((
+      e5_EILF6 <span class="op">==</span><span class="st"> </span><span class="dv">1</span> <span class="op">|</span>
+<span class="st">        </span>e5_EILF5 <span class="op">==</span><span class="st"> </span><span class="dv">1</span> <span class="op">|</span>
+<span class="st">        </span>e5_EILF4 <span class="op">==</span><span class="st"> </span><span class="dv">4</span> <span class="op">|</span><span class="st"> </span>e5_EILF4 <span class="op">==</span><span class="st"> </span><span class="dv">5</span> <span class="op">|</span><span class="st"> </span>e5_EILF4 <span class="op">==</span><span class="st"> </span><span class="dv">6</span>
+    ),
+    <span class="dv">2</span>,
+    smoke5
+    )
+  ) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">select</span>(ergoid, rs_cohort, smoke4, smoke5)</code></pre>
 <ol start="6" style="list-style-type: decimal">
 <li>Bind , the cohorts. Since the variable names are consistent through the datasets.</li>
 </ol>
-<pre class="sourceCode r"><code class="sourceCode r">smoke &lt;-<span class="st"> </span>rs1_smoke <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">bind_rows</span>(rs2_smoke) <span class="op">%&gt;%</span><span class="st"> </span>
+<pre class="sourceCode r"><code class="sourceCode r">smoke &lt;-<span class="st"> </span>rs1_smoke <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">bind_rows</span>(rs2_smoke) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">bind_rows</span>(rs3_smoke)</code></pre>
 <ol start="7" style="list-style-type: decimal">
 <li>Export the variable to a <code>clean_data</code> folder.</li>
@@ -285,8 +426,8 @@ rs3_smoke &lt;-<span class="st"> </span>rs3_smoke<span class="op">%&gt;%</span>
           </div>
         </div>
       </div>
-<a href="alcohol.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-
+<a href="alcohol.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="smoke-cig.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
