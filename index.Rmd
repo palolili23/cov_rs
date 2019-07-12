@@ -1,0 +1,28 @@
+--- 
+title: "Data cleaning guide for the Rotterdam Study"
+author: "Paloma Rojas Saunero, Eline Vinke"
+date: "`r Sys.Date()`"
+site: bookdown::bookdown_site
+documentclass: book
+bibliography: [book.bib, packages.bib]
+biblio-style: apalike
+link-citations: yes
+description: "This is a guide that contains basic scripts for cleaning the data from the Rotterdam Study. It is intended to guide students on their own data cleaning process for specific aims."
+---
+
+# Prerequisites
+
+```{r include=FALSE}
+# automatically create a bib database for R packages
+knitr::write_bib(c(
+  .packages(), 'bookdown', 'knitr', 'rmarkdown'
+), 'packages.bib')
+```
+- Install R and Rstudio IDE
+
+- Install and open the following packages:
+
+- Create an R project with a folder for your raw data (We will name this folder `00_raw_data`)
+
+- Data can be accessed from the following:  [link](https://epi-wiki.erasmusmc.nl/wiki/ergowiki/index.php/Ergobasics)
+
