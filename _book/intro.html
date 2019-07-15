@@ -24,7 +24,7 @@
 <meta name="author" content="Paloma Rojas Saunero, Eline Vinke" />
 
 
-<meta name="date" content="2019-07-12" />
+<meta name="date" content="2019-07-15" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -139,7 +139,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="8" data-path="alcohol.html"><a href="alcohol.html"><i class="fa fa-check"></i><b>8</b> Alcohol</a></li>
 <li class="chapter" data-level="9" data-path="smoke.html"><a href="smoke.html"><i class="fa fa-check"></i><b>9</b> Smoke anything</a></li>
 <li class="chapter" data-level="10" data-path="smoke-cig.html"><a href="smoke-cig.html"><i class="fa fa-check"></i><b>10</b> Smoke cigarettes</a></li>
-<li class="chapter" data-level="11" data-path="ht.html"><a href="ht.html"><i class="fa fa-check"></i><b>11</b> Hipertension</a></li>
+<li class="chapter" data-level="11" data-path="ht.html"><a href="ht.html"><i class="fa fa-check"></i><b>11</b> Hypertension</a></li>
+<li class="chapter" data-level="12" data-path="lab.html"><a href="lab.html"><i class="fa fa-check"></i><b>12</b> Laboratory data</a></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
 
@@ -164,19 +165,115 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h1><span class="header-section-number">Chapter 2</span> Introduction</h1>
 <p>We will use the <em>tidyverse</em> language and ecosystem.
 The intentation is that all students becoming familiar with the data, develop the essencial skills for a reproducible data cleaning, since this is the first step before doing any data analysis.</p>
+<p>We followed the structure of the visit process to name the cohorts and visits:</p>
+<p><img src="rs.png" width="150%" /></p>
+<p>In the following structure:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left;">
+var1
+</th>
+<th style="text-align:left;">
+var2
+</th>
+<th style="text-align:left;">
+var3
+</th>
+<th style="text-align:left;">
+var4
+</th>
+<th style="text-align:left;">
+var5
+</th>
+<th style="text-align:left;">
+var6
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+RS-I-1
+</td>
+<td style="text-align:left;">
+RS-I-2
+</td>
+<td style="text-align:left;">
+RS-I-3
+</td>
+<td style="text-align:left;">
+RS-I-4
+</td>
+<td style="text-align:left;">
+RS-I-5
+</td>
+<td style="text-align:left;">
+RS-I-6
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+RS-II-1 (ep)
+</td>
+<td style="text-align:left;">
+RS-II-2
+</td>
+<td style="text-align:left;">
+RS-III-3
+</td>
+<td style="text-align:left;">
+RS-III-4
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+RS-III-1 (ej)
+</td>
+<td style="text-align:left;">
+RS-III-2
+</td>
+<td style="text-align:left;">
+RS-III-3
+</td>
+</tr>
+</tbody>
+</table>
 <p>Each small chapter will provide the code to clean each of the variables that are oftenly used as covariates in any data analysis.</p>
 <p>Since the name of the variables could have changed in each visit, and data is arranged in different ways, we decided to create a systematic flow of how the cleaning process is one covariate at a time, for all visits, for all cohorts.</p>
 <p>The usuals steps will include:</p>
 <ol style="list-style-type: decimal">
-<li>Import datasets for all the visits, for all cohorts</li>
+<li>Import datasets for all the visits, for all cohorts.</li>
 </ol>
 <ul>
+<li><p>Note that we use the <code>here</code> package to specify the folder/subfolder and file we want to import. We do this to avoid specifying the directory. This practice helps the reproducibility of the code as mentioned in the following <a href="https://www.tidyverse.org/articles/2017/12/workflow-vs-script/">link</a></p>
+<ul>
 <li>We will always include the subfix representing the cohort and visit. For example:</li>
+</ul></li>
 </ul>
-<pre class="sourceCode r"><code class="sourceCode r">rs1_<span class="dv">5</span> &lt;-<span class="st"> </span><span class="kw">import</span>(<span class="st">&quot;./00_raw_data/visits/e5_(5)_RESPONS_(22-jun-2016)_excerpt.sav&quot;</span>)
-rs1_<span class="dv">6</span> &lt;-<span class="st"> </span><span class="kw">import</span>(<span class="st">&quot;./00_raw_data/visits/e6_(6)_RESPONS_(10-feb-2017)_EXCERPT.sav&quot;</span>)
-rs2_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">import</span>(<span class="st">&quot;./00_raw_data/visits/ep_(1)_RESPONS_(15-jan-2019)_excerpt.sav&quot;</span>)
-rs3_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">import</span>(<span class="st">&quot;./00_raw_data/visits/ej_(1)_RESPONS_(04-apr-2016)_excerpt.sav&quot;</span>)</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">rs1_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">read_sav</span>(here<span class="op">::</span><span class="kw">here</span>(<span class="st">&quot;00_raw_data&quot;</span>, <span class="st">&quot;visits&quot;</span>, <span class="st">&quot;Ergo1ResponseDetail_(22-jan-2015)_excerpt.sav&quot;</span>))
+rs1_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">read_sav</span>(here<span class="op">::</span><span class="kw">here</span>(<span class="st">&quot;00_raw_data&quot;</span>, <span class="st">&quot;visits&quot;</span>, <span class="st">&quot;Ergo2ResponseDetail_(22-jan-2015)_excerpt.sav&quot;</span>))
+rs1_<span class="dv">3</span> &lt;-<span class="st"> </span><span class="kw">read_sav</span>(here<span class="op">::</span><span class="kw">here</span>(<span class="st">&quot;00_raw_data&quot;</span>, <span class="st">&quot;visits&quot;</span>, <span class="st">&quot;e3_(3)_RESPONS_(22-feb-2016)_excerpt.sav&quot;</span>))
+rs1_<span class="dv">4</span> &lt;-<span class="st"> </span><span class="kw">read_sav</span>(here<span class="op">::</span><span class="kw">here</span>(<span class="st">&quot;00_raw_data&quot;</span>, <span class="st">&quot;visits&quot;</span>, <span class="st">&quot;e4_(4)_RESPONS_(12-mar-2018)_excerpt.sav&quot;</span>))
+rs1_<span class="dv">5</span> &lt;-<span class="st"> </span><span class="kw">read_sav</span>(here<span class="op">::</span><span class="kw">here</span>(<span class="st">&quot;00_raw_data&quot;</span>, <span class="st">&quot;visits&quot;</span>, <span class="st">&quot;e5_(5)_RESPONS_(22-jun-2016)_excerpt.sav&quot;</span>))
+rs1_<span class="dv">6</span> &lt;-<span class="st"> </span><span class="kw">read_sav</span>(here<span class="op">::</span><span class="kw">here</span>(<span class="st">&quot;00_raw_data&quot;</span>, <span class="st">&quot;visits&quot;</span>, <span class="st">&quot;e6_(6)_RESPONS_(10-feb-2017)_EXCERPT.sav&quot;</span>))
+rs2_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">read_sav</span>(here<span class="op">::</span><span class="kw">here</span>(<span class="st">&quot;00_raw_data&quot;</span>, <span class="st">&quot;visits&quot;</span>, <span class="st">&quot;ep_(1)_RESPONS_(15-jan-2019)_excerpt.sav&quot;</span>))
+rs3_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">read_sav</span>(here<span class="op">::</span><span class="kw">here</span>(<span class="st">&quot;00_raw_data&quot;</span>, <span class="st">&quot;visits&quot;</span>, <span class="st">&quot;ej_(1)_RESPONS_(04-apr-2016)_excerpt.sav&quot;</span>))</code></pre>
 <ol start="2" style="list-style-type: decimal">
 <li>We will split the datasets that have data for more than one cohort, and name them by their respective cohort - visit. For example:</li>
 </ol>

@@ -3,21 +3,49 @@
 We will use the *tidyverse* language and ecosystem.
 The intentation is that all students becoming familiar with the data, develop the essencial skills for a reproducible data cleaning, since this is the first step before doing any data analysis. 
 
+We followed the structure of the visit process to name the cohorts and visits:
+
+```{r, echo = FALSE, out.width = "150%"}
+knitr::include_graphics("./rs.png")
+```
+
+In the following structure:
+
+```{r, echo = FALSE}
+var1 <- c("RS-I-1", NA, NA)
+var2 <- c("RS-I-2", NA, NA)
+var3 <- c("RS-I-3", "RS-II-1 (ep)", NA)
+var4 <- c("RS-I-4", "RS-II-2", "RS-III-1 (ej)")
+var5 <- c("RS-I-5", "RS-III-3", "RS-III-2")
+var6 <- c("RS-I-6", "RS-III-4", "RS-III-3")
+
+rs <- cbind(var1, var2, var3, var4, var5, var6)
+
+kableExtra::kable(rs)
+```
+
+
 Each small chapter will provide the code to clean each of the variables that are oftenly used as covariates in any data analysis.
 
 Since the name of the variables could have changed in each visit, and data is arranged in different ways, we decided to create a systematic flow of how the cleaning process is one covariate at a time, for all visits, for all cohorts.
 
 The usuals steps will include:
 
-1. Import datasets for all the visits, for all cohorts
+1. Import datasets for all the visits, for all cohorts. 
+
+- Note that we use the `here` package to specify the folder/subfolder and file we want to import. We do this to avoid specifying the directory. This practice helps the reproducibility of the code as mentioned in the following [link](https://www.tidyverse.org/articles/2017/12/workflow-vs-script/)
   
   - We will always include the subfix representing the cohort and visit. For example:
   
 ```{r, eval = FALSE}
-rs1_5 <- import("./00_raw_data/visits/e5_(5)_RESPONS_(22-jun-2016)_excerpt.sav")
-rs1_6 <- import("./00_raw_data/visits/e6_(6)_RESPONS_(10-feb-2017)_EXCERPT.sav")
-rs2_1 <- import("./00_raw_data/visits/ep_(1)_RESPONS_(15-jan-2019)_excerpt.sav")
-rs3_1 <- import("./00_raw_data/visits/ej_(1)_RESPONS_(04-apr-2016)_excerpt.sav")
+rs1_1 <- read_sav(here::here("00_raw_data", "visits", "Ergo1ResponseDetail_(22-jan-2015)_excerpt.sav"))
+rs1_2 <- read_sav(here::here("00_raw_data", "visits", "Ergo2ResponseDetail_(22-jan-2015)_excerpt.sav"))
+rs1_3 <- read_sav(here::here("00_raw_data", "visits", "e3_(3)_RESPONS_(22-feb-2016)_excerpt.sav"))
+rs1_4 <- read_sav(here::here("00_raw_data", "visits", "e4_(4)_RESPONS_(12-mar-2018)_excerpt.sav"))
+rs1_5 <- read_sav(here::here("00_raw_data", "visits", "e5_(5)_RESPONS_(22-jun-2016)_excerpt.sav"))
+rs1_6 <- read_sav(here::here("00_raw_data", "visits", "e6_(6)_RESPONS_(10-feb-2017)_EXCERPT.sav"))
+rs2_1 <- read_sav(here::here("00_raw_data", "visits", "ep_(1)_RESPONS_(15-jan-2019)_excerpt.sav"))
+rs3_1 <- read_sav(here::here("00_raw_data", "visits", "ej_(1)_RESPONS_(04-apr-2016)_excerpt.sav"))
 ```
 
 2. We will split the datasets that have data for more than one cohort, and name them by their respective cohort - visit. For example:

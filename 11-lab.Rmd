@@ -1,0 +1,121 @@
+# Laboratory data {#lab}
+
+
+Source: https://epi-wiki.erasmusmc.nl/wiki/ergowiki/index.php/Cholesterol
+
+We included cholesterol and hdl since they were sistematically collected across visits for all cohorts. 
+*Note*: There are no laboratory data for visit RS-I-2
+
+Glucose has the subfix: **v3846**, but since it was collected in different ways and not in all waves, we don't include it, but it could be collected using the same code.
+
+1. Import data for all cohorts
+
+```{r, eval = FALSE}
+chol1_1 <- import(here::here("00_raw_data", "cholesterol",  "e1_CHOLESTEROL_(10.03.2010).sav"))
+chol1_3 <- import(here::here("00_raw_data", "cholesterol",  "e3_(3)_LAB_(10-mar-2010).sav"))
+chol1_4 <- import(here::here("00_raw_data", "cholesterol",  "e4_(4)_LAB_(10-mar-2010)b.sav"))
+chol1_5 <- import(here::here("00_raw_data", "cholesterol",  "e5_(5)_LAB_(29-aug-2014)r.sav"))
+chol2_1 <- import(here::here("00_raw_data", "cholesterol",  "ep_(1)_LAB_(15-mar-2010).sav"))
+chol3_1 <- import(here::here("00_raw_data", "cholesterol",  "ej_(1)_LAB_(11-jun-2009)r.sav"))
+```
+
+2. Split datasets:
+  
+```{r, eval = FALSE}
+
+# 1. Separate chol1_4 into rs1, rs2, rs3
+
+chol2_2 <- chol1_4 %>%
+  filter(rs_cohort == 2)
+
+chol1_4 <- chol1_4 %>%
+  filter(rs_cohort == 1)
+
+# 2. Separate chol1_5 into rs1, rs2, rs3
+
+chol3_2 <- chol1_5 %>%
+  filter(rs_cohort == 3)
+
+chol2_3 <- chol1_5 %>%
+  filter(rs_cohort == 2)
+
+chol1_5 <- chol1_5 %>%
+  filter(rs_cohort == 1)
+
+# 3. Separate chol1_6 into rs1 and rs2
+
+# Not available
+
+```
+
+3. Merge the data for all visits, by cohort:
+  
+```{r, eval = FALSE}
+
+### Merge RSI
+
+chol1 <- list(chol1_1, chol1_3, chol1_4, chol1_5)#, chol1_6)
+
+rs1_chol <- reduce(chol1, left_join, by = c("ergoid"))
+
+### Merge RSII
+
+chol2 <- list(chol2_1, chol2_2, chol2_3)#,chol2_4)
+
+rs2_chol <- reduce(chol2, left_join, by = c("ergoid"))
+
+### Merge RSIII
+
+chol3 <- list(chol3_1, chol3_2)
+
+rs3_chol <- reduce(chol3, left_join, by = c("ergoid"))
+
+```
+
+4. Select and rename variables:
+
+```{r, eval = FALSE}
+
+rs1_chol <- rs1_chol %>% 
+  select(ergoid, e1_al7_chl, e1_al7_hdl, ends_with("_3845"), ends_with("_4107")) %>%
+  rename(chol1 = e1_al7_chl,
+         chol3 = e3_3845,
+         chol4 = e3_3845,
+         chol5 = e5_3845,
+         hdl1 = e1_al7_hdl,
+         hdl3 = e3_4107,
+         hdl4 = e4_4107,
+         hdl5 = e5_4107)
+
+rs2_chol <- rs2_chol %>% 
+  select(ergoid, ends_with("_3845"), ends_with("_4107")) %>%
+  rename(chol3 = ep_3845,
+         chol4 = e4_3845,
+         chol5 = e5_3845,
+         hdl3 = ep_4107,
+         hdl4 = e4_4107,
+         hdl5 = e5_4107)
+
+
+rs3_chol <- rs3_chol %>% 
+  select(ergoid, ends_with("_3845"), ends_with("_4107")) %>%
+  rename(chol4 = ej_3845,
+         chol5 = e5_3845,
+         hdl4 = ej_4107,
+         hdl5 = e5_4107)
+
+```
+
+5. Bind , the cohorts. Since the variable names are consistent through the datasets.
+
+```{r, eval = FALSE}
+chol <- rs1_chol %>%
+  bind_rows(rs2_chol) %>%
+  bind_rows(rs3_chol)
+```
+
+6. Export the variable to a `clean_data` folder.
+
+```{r, eval = FALSE}
+export(chol, here::here("02_clean_data", "chol.Rdata"))
+```

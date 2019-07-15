@@ -1,0 +1,106 @@
+# Hypertension {#ht}
+
+Source: https://epi-wiki.erasmusmc.nl/wiki/ergowiki/index.php/Hypertension
+
+1. Import data for all cohorts
+
+```{r, eval = FALSE}
+ht <- read_sav(here::here("00_raw_data", "hypertension", "HT2018_analysisfile_(15-may-2018).sav"))
+```
+
+2. Split datasets:
+  
+```{r, eval = FALSE}
+
+# 1. Separate hypertension for RS-I, RS-II and RS-III
+
+ht1 <- ht %>%
+  filter(rs_cohort == 1)
+
+ht2 <- ht %>%
+  filter(rs_cohort == 2)
+
+ht3 <- ht %>%
+  filter(rs_cohort == 3)
+
+```
+
+3. Select and rename variables:
+
+```{r, eval = FALSE}
+ht1 <- ht %>%
+  select(ergoid, contains("systolicBP"), contains("diastolicBP"), contains("HT2018"), contains("bpldrug")) %>%
+  rename(
+    sbp1 = e1_systolicBP,
+    sbp2 = e2_systolicBP,
+    sbp3 = e3_systolicBP,
+    sbp4 = e4_systolicBP,
+    sbp5 = e5_systolicBP,
+    sbp6 = e6_systolicBP,
+    dbp1 = e1_diastolicBP,
+    dbp2 = e2_diastolicBP,
+    dbp3 = e3_diastolicBP,
+    dbp4 = e4_diastolicBP,
+    dbp5 = e5_diastolicBP,
+    dbp6 = e6_diastolicBP,
+    ht1 = e1_HT2018,
+    ht2 = e2_HT2018,
+    ht3 = e3_HT2018,
+    ht4 = e4_HT2018,
+    ht5 = e5_HT2018,
+    ht6 = e6_HT2018,
+    htdrug1 = e1_bpldrug,
+    htdrug2 = e2_bpldrug,
+    htdrug3 = e3_bpldrug,
+    htdrug4 = e4_bpldrug,
+    htdrug5 = e5_bpldrug,
+    htdrug6 = e6_bpldrug
+    )
+
+
+ht2 <- ht %>% 
+  select(ergoid, contains("systolicBP"), contains("diastolicBP"), contains("HT2018"), contains("bpldrug")) %>%
+  rename(
+    sbp3 = ep_systolicBP,
+    sbp4 = e4_systolicBP,
+    sbp5 = e5_systolicBP,
+    sbp6 = e6_systolicBP,
+    dbp3 = ep_diastolicBP,
+    dbp4 = e4_diastolicBP,
+    dbp5 = e5_diastolicBP,
+    dbp6 = e6_diastolicBP,
+    ht3 = ep_HT2018,
+    ht4 = e4_HT2018,
+    ht5 = e5_HT2018,
+    ht6 = e6_HT2018,
+    htdrug3 = ep_bpldrug,
+    htdrug4 = e4_bpldrug,
+    htdrug5 = e5_bpldrug,
+    htdrug6 = e6_bpldrug
+    )
+
+ht3 <- ht %>% 
+  filter(rs_cohort == 3) %>%
+  select(ergoid, contains("systolicBP"), contains("HT2018")) %>%
+  rename(
+    sbp4 = ej_systolicBP,
+    sbp5 = e5_systolicBP,
+    ht4 = ej_HT2018,
+    ht5 = e5_HT2018)
+```
+
+
+6. Bind , the cohorts. Since the variable names are consistent through the datasets.
+
+```{r, eval = FALSE}
+smoke_cig <- rs1_cig %>%
+  bind_rows(rs2_cig) %>%
+  bind_rows(rs3_cig)
+```
+
+7. Export the variable to a `clean_data` folder.
+
+```{r, eval = FALSE}
+export(smoke_cig, here::here("02_clean_data", "smoke_cig.Rdata"))
+```
+
