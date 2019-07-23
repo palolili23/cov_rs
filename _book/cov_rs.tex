@@ -125,7 +125,7 @@
   \postauthor{\par}
       \predate{\centering\large\emph}
   \postdate{\par}
-    \date{2019-07-15}
+    \date{2019-07-23}
 
 \usepackage{booktabs}
 
@@ -158,57 +158,21 @@ The intentation is that all students becoming familiar with the data, develop th
 
 We followed the structure of the visit process to name the cohorts and visits:
 
-\includegraphics[width=11.28in]{./rs}
+\includegraphics[width=1\linewidth]{./rs}
 
 In the following structure:
 
-var1
-
-var2
-
-var3
-
-var4
-
-var5
-
-var6
-
-RS-I-1
-
-RS-I-2
-
-RS-I-3
-
-RS-I-4
-
-RS-I-5
-
-RS-I-6
-
-NA
-
-NA
-
-RS-II-1 (ep)
-
-RS-II-2
-
-RS-III-3
-
-RS-III-4
-
-NA
-
-NA
-
-NA
-
-RS-III-1 (ej)
-
-RS-III-2
-
-RS-III-3
+\begin{tabular}{l|l|l|l|l|l}
+\hline
+var1 & var2 & var3 & var4 & var5 & var6\\
+\hline
+RS-I-1 & RS-I-2 & RS-I-3 & RS-I-4 & RS-I-5 & RS-I-6\\
+\hline
+NA & NA & RS-II-1 (ep) & RS-II-2 & RS-III-3 & RS-III-4\\
+\hline
+NA & NA & NA & RS-III-1 (ej) & RS-III-2 & RS-III-3\\
+\hline
+\end{tabular}
 
 Each small chapter will provide the code to clean each of the variables that are oftenly used as covariates in any data analysis.
 
@@ -220,21 +184,30 @@ The usuals steps will include:
 \def\labelenumi{\arabic{enumi}.}
 \tightlist
 \item
-  Import datasets for all the visits, for all cohorts
+  Import datasets for all the visits, for all cohorts.
 \end{enumerate}
 
 \begin{itemize}
-\tightlist
 \item
-  We will always include the subfix representing the cohort and visit. For example:
+  Note that we use the \texttt{here} package to specify the folder/subfolder and file we want to import. We do this to avoid specifying the directory. This practice helps the reproducibility of the code as mentioned in the following \href{https://www.tidyverse.org/articles/2017/12/workflow-vs-script/}{link}
+
+  \begin{itemize}
+  \tightlist
+  \item
+    We will always include the subfix representing the cohort and visit. For example:
+  \end{itemize}
 \end{itemize}
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{rs1_}\DecValTok{5}\NormalTok{ <-}\StringTok{ }\KeywordTok{import}\NormalTok{(}\StringTok{"./00_raw_data/visits/e5_(5)_RESPONS_(22-jun-2016)_excerpt.sav"}\NormalTok{)}
-\NormalTok{rs1_}\DecValTok{6}\NormalTok{ <-}\StringTok{ }\KeywordTok{import}\NormalTok{(}\StringTok{"./00_raw_data/visits/e6_(6)_RESPONS_(10-feb-2017)_EXCERPT.sav"}\NormalTok{)}
-\NormalTok{rs2_}\DecValTok{1}\NormalTok{ <-}\StringTok{ }\KeywordTok{import}\NormalTok{(}\StringTok{"./00_raw_data/visits/ep_(1)_RESPONS_(15-jan-2019)_excerpt.sav"}\NormalTok{)}
-\NormalTok{rs3_}\DecValTok{1}\NormalTok{ <-}\StringTok{ }\KeywordTok{import}\NormalTok{(}\StringTok{"./00_raw_data/visits/ej_(1)_RESPONS_(04-apr-2016)_excerpt.sav"}\NormalTok{)}
+\NormalTok{rs1_}\DecValTok{1}\NormalTok{ <-}\StringTok{ }\KeywordTok{read_sav}\NormalTok{(here}\OperatorTok{::}\KeywordTok{here}\NormalTok{(}\StringTok{"00_raw_data"}\NormalTok{, }\StringTok{"visits"}\NormalTok{, }\StringTok{"Ergo1ResponseDetail_(22-jan-2015)_excerpt.sav"}\NormalTok{))}
+\NormalTok{rs1_}\DecValTok{2}\NormalTok{ <-}\StringTok{ }\KeywordTok{read_sav}\NormalTok{(here}\OperatorTok{::}\KeywordTok{here}\NormalTok{(}\StringTok{"00_raw_data"}\NormalTok{, }\StringTok{"visits"}\NormalTok{, }\StringTok{"Ergo2ResponseDetail_(22-jan-2015)_excerpt.sav"}\NormalTok{))}
+\NormalTok{rs1_}\DecValTok{3}\NormalTok{ <-}\StringTok{ }\KeywordTok{read_sav}\NormalTok{(here}\OperatorTok{::}\KeywordTok{here}\NormalTok{(}\StringTok{"00_raw_data"}\NormalTok{, }\StringTok{"visits"}\NormalTok{, }\StringTok{"e3_(3)_RESPONS_(22-feb-2016)_excerpt.sav"}\NormalTok{))}
+\NormalTok{rs1_}\DecValTok{4}\NormalTok{ <-}\StringTok{ }\KeywordTok{read_sav}\NormalTok{(here}\OperatorTok{::}\KeywordTok{here}\NormalTok{(}\StringTok{"00_raw_data"}\NormalTok{, }\StringTok{"visits"}\NormalTok{, }\StringTok{"e4_(4)_RESPONS_(12-mar-2018)_excerpt.sav"}\NormalTok{))}
+\NormalTok{rs1_}\DecValTok{5}\NormalTok{ <-}\StringTok{ }\KeywordTok{read_sav}\NormalTok{(here}\OperatorTok{::}\KeywordTok{here}\NormalTok{(}\StringTok{"00_raw_data"}\NormalTok{, }\StringTok{"visits"}\NormalTok{, }\StringTok{"e5_(5)_RESPONS_(22-jun-2016)_excerpt.sav"}\NormalTok{))}
+\NormalTok{rs1_}\DecValTok{6}\NormalTok{ <-}\StringTok{ }\KeywordTok{read_sav}\NormalTok{(here}\OperatorTok{::}\KeywordTok{here}\NormalTok{(}\StringTok{"00_raw_data"}\NormalTok{, }\StringTok{"visits"}\NormalTok{, }\StringTok{"e6_(6)_RESPONS_(10-feb-2017)_EXCERPT.sav"}\NormalTok{))}
+\NormalTok{rs2_}\DecValTok{1}\NormalTok{ <-}\StringTok{ }\KeywordTok{read_sav}\NormalTok{(here}\OperatorTok{::}\KeywordTok{here}\NormalTok{(}\StringTok{"00_raw_data"}\NormalTok{, }\StringTok{"visits"}\NormalTok{, }\StringTok{"ep_(1)_RESPONS_(15-jan-2019)_excerpt.sav"}\NormalTok{))}
+\NormalTok{rs3_}\DecValTok{1}\NormalTok{ <-}\StringTok{ }\KeywordTok{read_sav}\NormalTok{(here}\OperatorTok{::}\KeywordTok{here}\NormalTok{(}\StringTok{"00_raw_data"}\NormalTok{, }\StringTok{"visits"}\NormalTok{, }\StringTok{"ej_(1)_RESPONS_(04-apr-2016)_excerpt.sav"}\NormalTok{))}
 \end{Highlighting}
 \end{Shaded}
 

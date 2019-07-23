@@ -5,7 +5,7 @@ The intentation is that all students becoming familiar with the data, develop th
 
 We followed the structure of the visit process to name the cohorts and visits:
 
-```{r, echo = FALSE, out.width = "150%"}
+```{r, echo = FALSE, out.width = "100%"}
 knitr::include_graphics("./rs.png")
 ```
 
@@ -21,7 +21,7 @@ var6 <- c("RS-I-6", "RS-III-4", "RS-III-3")
 
 rs <- cbind(var1, var2, var3, var4, var5, var6)
 
-kableExtra::kable(rs)
+knitr::kable(rs)
 ```
 
 
