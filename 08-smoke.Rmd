@@ -79,8 +79,7 @@ rs3_smoke <- smoke3_1 %>%
 rs1_smoke <- rs1_smoke %>%
   mutate(
     smoke1 = ifelse((e1_ai7_20 == 0 & e1_ai7_30 == 0), 0, NA),
-    smoke1 = ifelse((e1_ai7_20 == 0 &
-                       e1_ai7_30 == 1), 1, smoke1),
+    smoke1 = ifelse((e1_ai7_20 == 0 & e1_ai7_30 == 1), 1, smoke1),
     smoke1 = ifelse(e1_ai7_20 == 1, 2, smoke1),
     smoke2 = ifelse(e2_b0cg == 3 &
                       e2_b0pi == 3 & e2_b0ct == 3, 0, NA),
@@ -95,8 +94,7 @@ rs1_smoke <- rs1_smoke %>%
         e3_cipi == 1 | (e3_cict == 0 & e3_cictps == 1)
     ), 1, smoke3),
     smoke3 = ifelse((e3_cicg == 2 |
-                       e3_cicg == 3 |
-                       e3_cipi == 2 | e3_cipi == 3 | e3_cict == 1),
+                       e3_cicg == 3 | e3_cipi == 2 | e3_cipi == 3 | e3_cict == 1),
                     2,
                     smoke3
     ),
@@ -107,8 +105,7 @@ rs1_smoke <- rs1_smoke %>%
         e4_dipi == 1 | e4_dict == 2 | e4_dict == 3
     ), 1, smoke4),
     smoke4 = ifelse((e4_dicg == 2 |
-                       e4_dicg == 3 |
-                       e4_dipi == 2 | e4_dipi == 3 | e4_dict == 1),
+                       e4_dicg == 3 | e4_dipi == 2 | e4_dipi == 3 | e4_dict == 1),
                     2,
                     smoke4
     ),
@@ -152,7 +149,7 @@ rs1_smoke <- rs1_smoke %>%
     smoke6
     )
   ) %>%
-  select(ergoid, smoke1, smoke2, smoke3, smoke4, smoke5)
+  select(ergoid, smoke1, smoke2, smoke3, smoke4, smoke5, smoke6)
 
 rs2_smoke <- rs2_smoke %>%
   mutate(
@@ -188,7 +185,7 @@ rs2_smoke <- rs2_smoke %>%
     ),
     smoke5 = ifelse((
       e5_EILF6 == 1 |
-        e5_EILF5 == 1 |
+        e5_EILF5 == 2 |
         e5_EILF4 == 4 | e5_EILF4 == 5 | e5_EILF4 == 6
     ),
     2,
@@ -250,7 +247,7 @@ rs3_smoke <- rs3_smoke %>%
     ),
     smoke5 = ifelse((
       e5_EILF6 == 1 |
-        e5_EILF5 == 1 |
+        e5_EILF5 == 2 |
         e5_EILF4 == 4 | e5_EILF4 == 5 | e5_EILF4 == 6
     ),
     2,
