@@ -1,7 +1,16 @@
 # Introduction {#intro}
 
-We will use the *tidyverse* language and ecosystem.
-The intentation is that all students becoming familiar with the data, develop the essencial skills for a reproducible data cleaning, since this is the first step before doing any data analysis. 
+## Prerequisites
+
+- Install R and Rstudio IDE
+
+- Install and open the following packages: `tidyverse`, `rio`, `here`.
+
+- Create an R project with a folder for your raw data (We will name this folder `00_raw_data`)
+
+- Data can be accessed from the following:  [link](https://epi-wiki.erasmusmc.nl/wiki/ergowiki/index.php/Ergobasics)
+
+## Rotterdam study data structure
 
 We followed the structure of the visit process to name the cohorts and visits:
 
@@ -16,14 +25,18 @@ var1 <- c("RS-I-1", NA, NA)
 var2 <- c("RS-I-2", NA, NA)
 var3 <- c("RS-I-3", "RS-II-1 (ep)", NA)
 var4 <- c("RS-I-4", "RS-II-2", "RS-III-1 (ej)")
-var5 <- c("RS-I-5", "RS-III-3", "RS-III-2")
-var6 <- c("RS-I-6", "RS-III-4", "RS-III-3")
+var5 <- c("RS-I-5", "RS-II-3", "RS-III-2")
+var6 <- c("RS-I-6", "RS-II-4", "RS-III-3")
 
 rs <- cbind(var1, var2, var3, var4, var5, var6)
 
 knitr::kable(rs)
 ```
 
+We name each variable in the same way over the waves and end with the number that corresponds to the visit.
+
+
+## Overview of the process to clean a variable
 
 Each small chapter will provide the code to clean each of the variables that are oftenly used as covariates in any data analysis.
 
