@@ -21,7 +21,6 @@
 \usepackage{microtype}
 \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
 }{}
-\usepackage[margin=1in]{geometry}
 \usepackage{hyperref}
 \hypersetup{unicode=true,
             pdftitle={Data cleaning guide for the Rotterdam Study},
@@ -29,8 +28,6 @@
             pdfborder={0 0 0},
             breaklinks=true}
 \urlstyle{same}  % don't use monospace font for urls
-\usepackage{natbib}
-\bibliographystyle{apalike}
 \usepackage{color}
 \usepackage{fancyvrb}
 \newcommand{\VerbBar}{|}
@@ -125,7 +122,7 @@
   \postauthor{\par}
       \predate{\centering\large\emph}
   \postdate{\par}
-    \date{2019-07-30}
+    \date{2019-10-15}
 
 \usepackage{booktabs}
 
@@ -136,25 +133,42 @@
 \setcounter{tocdepth}{1}
 \tableofcontents
 }
+\hypertarget{about}{%
+\chapter{About}\label{about}}
+
+Data cleaning (wrangling) will be the first to face after obtaining the raw data for your research.
+
+To facilitate this process, we want to provide a guide that describes how to approach the raw data from the Rotterdam study and provides the corresponding code to approach each variable. The intention is that all students becoming familiar with the data and develop the essencial skills for a reproducible data cleaning.
+
+We will use the \textbf{tidyverse} language and ecosystem. If you are not familiar with the tidyverse and the pipe operator \textbf{\%\textgreater\%} you will want to read \href{https://r4ds.had.co.nz/pipes.html}{this book}. This book contains a description of the essencial tidyverse tools.
+
+\textbf{Note:} If you find any bug, typo, have suggestions, questions or you want to include a chapter in this guide please get in contact with us! We want to make this as collaborative as possible.
+
+Paloma: \href{mailto:l.rojassaunero@erasmusmc.nl}{\nolinkurl{l.rojassaunero@erasmusmc.nl}}
+
+Eline: \href{mailto:e.vinke@erasmusmc.nl}{\nolinkurl{e.vinke@erasmusmc.nl}}
+
+Github repository: \url{https://github.com/palolili23/cov_rs}
+
+\hypertarget{intro}{%
+\chapter{Introduction}\label{intro}}
+
 \hypertarget{prerequisites}{%
-\chapter{Prerequisites}\label{prerequisites}}
+\section{Prerequisites}\label{prerequisites}}
 
 \begin{itemize}
 \item
   Install R and Rstudio IDE
 \item
-  Install and open the following packages:
+  Install and open the following packages: \texttt{tidyverse}, \texttt{rio}, \texttt{here}.
 \item
   Create an R project with a folder for your raw data (We will name this folder \texttt{00\_raw\_data})
 \item
   Data can be accessed from the following: \href{https://epi-wiki.erasmusmc.nl/wiki/ergowiki/index.php/Ergobasics}{link}
 \end{itemize}
 
-\hypertarget{intro}{%
-\chapter{Introduction}\label{intro}}
-
-We will use the \emph{tidyverse} language and ecosystem.
-The intentation is that all students becoming familiar with the data, develop the essencial skills for a reproducible data cleaning, since this is the first step before doing any data analysis.
+\hypertarget{rotterdam-study-data-structure}{%
+\section{Rotterdam study data structure}\label{rotterdam-study-data-structure}}
 
 We followed the structure of the visit process to name the cohorts and visits:
 
@@ -168,11 +182,16 @@ var1 & var2 & var3 & var4 & var5 & var6\\
 \hline
 RS-I-1 & RS-I-2 & RS-I-3 & RS-I-4 & RS-I-5 & RS-I-6\\
 \hline
-NA & NA & RS-II-1 (ep) & RS-II-2 & RS-III-3 & RS-III-4\\
+NA & NA & RS-II-1 (ep) & RS-II-2 & RS-II-3 & RS-II-4\\
 \hline
 NA & NA & NA & RS-III-1 (ej) & RS-III-2 & RS-III-3\\
 \hline
 \end{tabular}
+
+We name each variable in the same way over the waves and end with the number that corresponds to the visit.
+
+\hypertarget{overview-of-the-process-to-clean-a-variable}{%
+\section{Overview of the process to clean a variable}\label{overview-of-the-process-to-clean-a-variable}}
 
 Each small chapter will provide the code to clean each of the variables that are oftenly used as covariates in any data analysis.
 
@@ -1102,8 +1121,7 @@ Source: \url{https://epi-wiki.erasmusmc.nl/wiki/ergowiki/index.php/Smoking}
 \NormalTok{rs1_smoke <-}\StringTok{ }\NormalTok{rs1_smoke }\OperatorTok{%>%}
 \StringTok{  }\KeywordTok{mutate}\NormalTok{(}
     \DataTypeTok{smoke1 =} \KeywordTok{ifelse}\NormalTok{((e1_ai7_}\DecValTok{20} \OperatorTok{==}\StringTok{ }\DecValTok{0} \OperatorTok{&}\StringTok{ }\NormalTok{e1_ai7_}\DecValTok{30} \OperatorTok{==}\StringTok{ }\DecValTok{0}\NormalTok{), }\DecValTok{0}\NormalTok{, }\OtherTok{NA}\NormalTok{),}
-    \DataTypeTok{smoke1 =} \KeywordTok{ifelse}\NormalTok{((e1_ai7_}\DecValTok{20} \OperatorTok{==}\StringTok{ }\DecValTok{0} \OperatorTok{&}
-\StringTok{                       }\NormalTok{e1_ai7_}\DecValTok{30} \OperatorTok{==}\StringTok{ }\DecValTok{1}\NormalTok{), }\DecValTok{1}\NormalTok{, smoke1),}
+    \DataTypeTok{smoke1 =} \KeywordTok{ifelse}\NormalTok{((e1_ai7_}\DecValTok{20} \OperatorTok{==}\StringTok{ }\DecValTok{0} \OperatorTok{&}\StringTok{ }\NormalTok{e1_ai7_}\DecValTok{30} \OperatorTok{==}\StringTok{ }\DecValTok{1}\NormalTok{), }\DecValTok{1}\NormalTok{, smoke1),}
     \DataTypeTok{smoke1 =} \KeywordTok{ifelse}\NormalTok{(e1_ai7_}\DecValTok{20} \OperatorTok{==}\StringTok{ }\DecValTok{1}\NormalTok{, }\DecValTok{2}\NormalTok{, smoke1),}
     \DataTypeTok{smoke2 =} \KeywordTok{ifelse}\NormalTok{(e2_b0cg }\OperatorTok{==}\StringTok{ }\DecValTok{3} \OperatorTok{&}
 \StringTok{                      }\NormalTok{e2_b0pi }\OperatorTok{==}\StringTok{ }\DecValTok{3} \OperatorTok{&}\StringTok{ }\NormalTok{e2_b0ct }\OperatorTok{==}\StringTok{ }\DecValTok{3}\NormalTok{, }\DecValTok{0}\NormalTok{, }\OtherTok{NA}\NormalTok{),}
@@ -1118,8 +1136,7 @@ Source: \url{https://epi-wiki.erasmusmc.nl/wiki/ergowiki/index.php/Smoking}
 \StringTok{        }\NormalTok{e3_cipi }\OperatorTok{==}\StringTok{ }\DecValTok{1} \OperatorTok{|}\StringTok{ }\NormalTok{(e3_cict }\OperatorTok{==}\StringTok{ }\DecValTok{0} \OperatorTok{&}\StringTok{ }\NormalTok{e3_cictps }\OperatorTok{==}\StringTok{ }\DecValTok{1}\NormalTok{)}
 \NormalTok{    ), }\DecValTok{1}\NormalTok{, smoke3),}
     \DataTypeTok{smoke3 =} \KeywordTok{ifelse}\NormalTok{((e3_cicg }\OperatorTok{==}\StringTok{ }\DecValTok{2} \OperatorTok{|}
-\StringTok{                       }\NormalTok{e3_cicg }\OperatorTok{==}\StringTok{ }\DecValTok{3} \OperatorTok{|}
-\StringTok{                       }\NormalTok{e3_cipi }\OperatorTok{==}\StringTok{ }\DecValTok{2} \OperatorTok{|}\StringTok{ }\NormalTok{e3_cipi }\OperatorTok{==}\StringTok{ }\DecValTok{3} \OperatorTok{|}\StringTok{ }\NormalTok{e3_cict }\OperatorTok{==}\StringTok{ }\DecValTok{1}\NormalTok{),}
+\StringTok{                       }\NormalTok{e3_cicg }\OperatorTok{==}\StringTok{ }\DecValTok{3} \OperatorTok{|}\StringTok{ }\NormalTok{e3_cipi }\OperatorTok{==}\StringTok{ }\DecValTok{2} \OperatorTok{|}\StringTok{ }\NormalTok{e3_cipi }\OperatorTok{==}\StringTok{ }\DecValTok{3} \OperatorTok{|}\StringTok{ }\NormalTok{e3_cict }\OperatorTok{==}\StringTok{ }\DecValTok{1}\NormalTok{),}
                     \DecValTok{2}\NormalTok{,}
 \NormalTok{                    smoke3}
 \NormalTok{    ),}
@@ -1130,8 +1147,7 @@ Source: \url{https://epi-wiki.erasmusmc.nl/wiki/ergowiki/index.php/Smoking}
 \StringTok{        }\NormalTok{e4_dipi }\OperatorTok{==}\StringTok{ }\DecValTok{1} \OperatorTok{|}\StringTok{ }\NormalTok{e4_dict }\OperatorTok{==}\StringTok{ }\DecValTok{2} \OperatorTok{|}\StringTok{ }\NormalTok{e4_dict }\OperatorTok{==}\StringTok{ }\DecValTok{3}
 \NormalTok{    ), }\DecValTok{1}\NormalTok{, smoke4),}
     \DataTypeTok{smoke4 =} \KeywordTok{ifelse}\NormalTok{((e4_dicg }\OperatorTok{==}\StringTok{ }\DecValTok{2} \OperatorTok{|}
-\StringTok{                       }\NormalTok{e4_dicg }\OperatorTok{==}\StringTok{ }\DecValTok{3} \OperatorTok{|}
-\StringTok{                       }\NormalTok{e4_dipi }\OperatorTok{==}\StringTok{ }\DecValTok{2} \OperatorTok{|}\StringTok{ }\NormalTok{e4_dipi }\OperatorTok{==}\StringTok{ }\DecValTok{3} \OperatorTok{|}\StringTok{ }\NormalTok{e4_dict }\OperatorTok{==}\StringTok{ }\DecValTok{1}\NormalTok{),}
+\StringTok{                       }\NormalTok{e4_dicg }\OperatorTok{==}\StringTok{ }\DecValTok{3} \OperatorTok{|}\StringTok{ }\NormalTok{e4_dipi }\OperatorTok{==}\StringTok{ }\DecValTok{2} \OperatorTok{|}\StringTok{ }\NormalTok{e4_dipi }\OperatorTok{==}\StringTok{ }\DecValTok{3} \OperatorTok{|}\StringTok{ }\NormalTok{e4_dict }\OperatorTok{==}\StringTok{ }\DecValTok{1}\NormalTok{),}
                     \DecValTok{2}\NormalTok{,}
 \NormalTok{                    smoke4}
 \NormalTok{    ),}
@@ -1175,7 +1191,7 @@ Source: \url{https://epi-wiki.erasmusmc.nl/wiki/ergowiki/index.php/Smoking}
 \NormalTok{    smoke6}
 \NormalTok{    )}
 \NormalTok{  ) }\OperatorTok{%>%}
-\StringTok{  }\KeywordTok{select}\NormalTok{(ergoid, smoke1, smoke2, smoke3, smoke4, smoke5)}
+\StringTok{  }\KeywordTok{select}\NormalTok{(ergoid, smoke1, smoke2, smoke3, smoke4, smoke5, smoke6)}
 
 \NormalTok{rs2_smoke <-}\StringTok{ }\NormalTok{rs2_smoke }\OperatorTok{%>%}
 \StringTok{  }\KeywordTok{mutate}\NormalTok{(}
@@ -1211,7 +1227,7 @@ Source: \url{https://epi-wiki.erasmusmc.nl/wiki/ergowiki/index.php/Smoking}
 \NormalTok{    ),}
     \DataTypeTok{smoke5 =} \KeywordTok{ifelse}\NormalTok{((}
 \NormalTok{      e5_EILF6 }\OperatorTok{==}\StringTok{ }\DecValTok{1} \OperatorTok{|}
-\StringTok{        }\NormalTok{e5_EILF5 }\OperatorTok{==}\StringTok{ }\DecValTok{1} \OperatorTok{|}
+\StringTok{        }\NormalTok{e5_EILF5 }\OperatorTok{==}\StringTok{ }\DecValTok{2} \OperatorTok{|}
 \StringTok{        }\NormalTok{e5_EILF4 }\OperatorTok{==}\StringTok{ }\DecValTok{4} \OperatorTok{|}\StringTok{ }\NormalTok{e5_EILF4 }\OperatorTok{==}\StringTok{ }\DecValTok{5} \OperatorTok{|}\StringTok{ }\NormalTok{e5_EILF4 }\OperatorTok{==}\StringTok{ }\DecValTok{6}
 \NormalTok{    ),}
     \DecValTok{2}\NormalTok{,}
@@ -1273,7 +1289,7 @@ Source: \url{https://epi-wiki.erasmusmc.nl/wiki/ergowiki/index.php/Smoking}
 \NormalTok{    ),}
     \DataTypeTok{smoke5 =} \KeywordTok{ifelse}\NormalTok{((}
 \NormalTok{      e5_EILF6 }\OperatorTok{==}\StringTok{ }\DecValTok{1} \OperatorTok{|}
-\StringTok{        }\NormalTok{e5_EILF5 }\OperatorTok{==}\StringTok{ }\DecValTok{1} \OperatorTok{|}
+\StringTok{        }\NormalTok{e5_EILF5 }\OperatorTok{==}\StringTok{ }\DecValTok{2} \OperatorTok{|}
 \StringTok{        }\NormalTok{e5_EILF4 }\OperatorTok{==}\StringTok{ }\DecValTok{4} \OperatorTok{|}\StringTok{ }\NormalTok{e5_EILF4 }\OperatorTok{==}\StringTok{ }\DecValTok{5} \OperatorTok{|}\StringTok{ }\NormalTok{e5_EILF4 }\OperatorTok{==}\StringTok{ }\DecValTok{6}
 \NormalTok{    ),}
     \DecValTok{2}\NormalTok{,}
@@ -1824,8 +1840,6 @@ Glucose has the subfix: \textbf{v3846}, but since it was collected in different 
 \KeywordTok{export}\NormalTok{(chol, here}\OperatorTok{::}\KeywordTok{here}\NormalTok{(}\StringTok{"02_clean_data"}\NormalTok{, }\StringTok{"chol.Rdata"}\NormalTok{))}
 \end{Highlighting}
 \end{Shaded}
-
-\bibliography{book.bib,packages.bib}
 
 
 \end{document}

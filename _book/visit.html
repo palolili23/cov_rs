@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Chapter 5 Visit dates | Data cleaning guide for the Rotterdam Study</title>
   <meta name="description" content="This is a guide that contains basic scripts for cleaning the data from the Rotterdam Study. It is intended to guide students on their own data cleaning process for specific aims." />
-  <meta name="generator" content="bookdown 0.11 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.14 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Chapter 5 Visit dates | Data cleaning guide for the Rotterdam Study" />
   <meta property="og:type" content="book" />
@@ -24,15 +24,15 @@
 <meta name="author" content="Paloma Rojas Saunero, Eline Vinke" />
 
 
-<meta name="date" content="2019-07-30" />
+<meta name="date" content="2019-10-15" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="vital.html">
-<link rel="next" href="bmi.html">
+<link rel="prev" href="vital.html"/>
+<link rel="next" href="bmi.html"/>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -40,6 +40,9 @@
 <link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
 
 
 
@@ -55,7 +58,6 @@ a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
 a.sourceLine:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode { white-space: pre; position: relative; }
-div.sourceCode { margin: 1em 0; }
 pre.sourceCode { margin: 0; }
 @media screen {
 div.sourceCode { overflow: auto; }
@@ -126,11 +128,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       <nav role="navigation">
 
 <ul class="summary">
-<li><a href="./">A Minimal Book Example</a></li>
+<li><a href="./">RS Data cleaning guide </a></li>
 
 <li class="divider"></li>
-<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Prerequisites</a></li>
-<li class="chapter" data-level="2" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>2</b> Introduction</a></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> About</a></li>
+<li class="chapter" data-level="2" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>2</b> Introduction</a><ul>
+<li class="chapter" data-level="2.1" data-path="intro.html"><a href="intro.html#prerequisites"><i class="fa fa-check"></i><b>2.1</b> Prerequisites</a></li>
+<li class="chapter" data-level="2.2" data-path="intro.html"><a href="intro.html#rotterdam-study-data-structure"><i class="fa fa-check"></i><b>2.2</b> Rotterdam study data structure</a></li>
+<li class="chapter" data-level="2.3" data-path="intro.html"><a href="intro.html#overview-of-the-process-to-clean-a-variable"><i class="fa fa-check"></i><b>2.3</b> Overview of the process to clean a variable</a></li>
+</ul></li>
 <li class="chapter" data-level="3" data-path="basic.html"><a href="basic.html"><i class="fa fa-check"></i><b>3</b> ERGO Basics</a></li>
 <li class="chapter" data-level="4" data-path="vital.html"><a href="vital.html"><i class="fa fa-check"></i><b>4</b> ERGO Vital status</a></li>
 <li class="chapter" data-level="5" data-path="visit.html"><a href="visit.html"><i class="fa fa-check"></i><b>5</b> Visit dates</a></li>
@@ -167,85 +173,85 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ol style="list-style-type: decimal">
 <li>Import data for all cohorts</li>
 </ol>
-<pre class="sourceCode r"><code class="sourceCode r">rs1_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">read_sav</span>(here<span class="op">::</span><span class="kw">here</span>(<span class="st">&quot;00_raw_data&quot;</span>, <span class="st">&quot;visits&quot;</span>, <span class="st">&quot;Ergo1ResponseDetail_(22-jan-2015)_excerpt.sav&quot;</span>))
-rs1_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">read_sav</span>(here<span class="op">::</span><span class="kw">here</span>(<span class="st">&quot;00_raw_data&quot;</span>, <span class="st">&quot;visits&quot;</span>, <span class="st">&quot;Ergo2ResponseDetail_(22-jan-2015)_excerpt.sav&quot;</span>))
-rs1_<span class="dv">3</span> &lt;-<span class="st"> </span><span class="kw">read_sav</span>(here<span class="op">::</span><span class="kw">here</span>(<span class="st">&quot;00_raw_data&quot;</span>, <span class="st">&quot;visits&quot;</span>, <span class="st">&quot;e3_(3)_RESPONS_(22-feb-2016)_excerpt.sav&quot;</span>))
-rs1_<span class="dv">4</span> &lt;-<span class="st"> </span><span class="kw">read_sav</span>(here<span class="op">::</span><span class="kw">here</span>(<span class="st">&quot;00_raw_data&quot;</span>, <span class="st">&quot;visits&quot;</span>, <span class="st">&quot;e4_(4)_RESPONS_(12-mar-2018)_excerpt.sav&quot;</span>))
-rs1_<span class="dv">5</span> &lt;-<span class="st"> </span><span class="kw">read_sav</span>(here<span class="op">::</span><span class="kw">here</span>(<span class="st">&quot;00_raw_data&quot;</span>, <span class="st">&quot;visits&quot;</span>, <span class="st">&quot;e5_(5)_RESPONS_(22-jun-2016)_excerpt.sav&quot;</span>))
-rs1_<span class="dv">6</span> &lt;-<span class="st"> </span><span class="kw">read_sav</span>(here<span class="op">::</span><span class="kw">here</span>(<span class="st">&quot;00_raw_data&quot;</span>, <span class="st">&quot;visits&quot;</span>, <span class="st">&quot;e6_(6)_RESPONS_(10-feb-2017)_EXCERPT.sav&quot;</span>))
-rs2_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">read_sav</span>(here<span class="op">::</span><span class="kw">here</span>(<span class="st">&quot;00_raw_data&quot;</span>, <span class="st">&quot;visits&quot;</span>, <span class="st">&quot;ep_(1)_RESPONS_(15-jan-2019)_excerpt.sav&quot;</span>))
-rs3_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">read_sav</span>(here<span class="op">::</span><span class="kw">here</span>(<span class="st">&quot;00_raw_data&quot;</span>, <span class="st">&quot;visits&quot;</span>, <span class="st">&quot;ej_(1)_RESPONS_(04-apr-2016)_excerpt.sav&quot;</span>))</code></pre>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" title="1">rs1_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">read_sav</span>(here<span class="op">::</span><span class="kw">here</span>(<span class="st">&quot;00_raw_data&quot;</span>, <span class="st">&quot;visits&quot;</span>, <span class="st">&quot;Ergo1ResponseDetail_(22-jan-2015)_excerpt.sav&quot;</span>))</a>
+<a class="sourceLine" id="cb14-2" title="2">rs1_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">read_sav</span>(here<span class="op">::</span><span class="kw">here</span>(<span class="st">&quot;00_raw_data&quot;</span>, <span class="st">&quot;visits&quot;</span>, <span class="st">&quot;Ergo2ResponseDetail_(22-jan-2015)_excerpt.sav&quot;</span>))</a>
+<a class="sourceLine" id="cb14-3" title="3">rs1_<span class="dv">3</span> &lt;-<span class="st"> </span><span class="kw">read_sav</span>(here<span class="op">::</span><span class="kw">here</span>(<span class="st">&quot;00_raw_data&quot;</span>, <span class="st">&quot;visits&quot;</span>, <span class="st">&quot;e3_(3)_RESPONS_(22-feb-2016)_excerpt.sav&quot;</span>))</a>
+<a class="sourceLine" id="cb14-4" title="4">rs1_<span class="dv">4</span> &lt;-<span class="st"> </span><span class="kw">read_sav</span>(here<span class="op">::</span><span class="kw">here</span>(<span class="st">&quot;00_raw_data&quot;</span>, <span class="st">&quot;visits&quot;</span>, <span class="st">&quot;e4_(4)_RESPONS_(12-mar-2018)_excerpt.sav&quot;</span>))</a>
+<a class="sourceLine" id="cb14-5" title="5">rs1_<span class="dv">5</span> &lt;-<span class="st"> </span><span class="kw">read_sav</span>(here<span class="op">::</span><span class="kw">here</span>(<span class="st">&quot;00_raw_data&quot;</span>, <span class="st">&quot;visits&quot;</span>, <span class="st">&quot;e5_(5)_RESPONS_(22-jun-2016)_excerpt.sav&quot;</span>))</a>
+<a class="sourceLine" id="cb14-6" title="6">rs1_<span class="dv">6</span> &lt;-<span class="st"> </span><span class="kw">read_sav</span>(here<span class="op">::</span><span class="kw">here</span>(<span class="st">&quot;00_raw_data&quot;</span>, <span class="st">&quot;visits&quot;</span>, <span class="st">&quot;e6_(6)_RESPONS_(10-feb-2017)_EXCERPT.sav&quot;</span>))</a>
+<a class="sourceLine" id="cb14-7" title="7">rs2_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">read_sav</span>(here<span class="op">::</span><span class="kw">here</span>(<span class="st">&quot;00_raw_data&quot;</span>, <span class="st">&quot;visits&quot;</span>, <span class="st">&quot;ep_(1)_RESPONS_(15-jan-2019)_excerpt.sav&quot;</span>))</a>
+<a class="sourceLine" id="cb14-8" title="8">rs3_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">read_sav</span>(here<span class="op">::</span><span class="kw">here</span>(<span class="st">&quot;00_raw_data&quot;</span>, <span class="st">&quot;visits&quot;</span>, <span class="st">&quot;ej_(1)_RESPONS_(04-apr-2016)_excerpt.sav&quot;</span>))</a></code></pre></div>
 <ol start="2" style="list-style-type: decimal">
 <li>Split datasets:</li>
 </ol>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="co">#1. Separate rs1_4 into rs1, rs2</span>
-
-rs2_<span class="dv">2</span> &lt;-<span class="st"> </span>rs1_<span class="dv">4</span> <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">filter</span>(rs_cohort <span class="op">==</span><span class="st"> </span><span class="dv">2</span>)
-
-rs1_<span class="dv">4</span> &lt;-<span class="st"> </span>rs1_<span class="dv">4</span> <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">filter</span>(rs_cohort <span class="op">==</span><span class="st"> </span><span class="dv">1</span>)
-
-<span class="co">#2. Separate rs1_5 into rs1, rs2, rs3</span>
-rs3_<span class="dv">2</span> &lt;-<span class="st"> </span>rs1_<span class="dv">5</span> <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">filter</span>(rs_cohort <span class="op">==</span><span class="st"> </span><span class="dv">3</span>)
-
-rs2_<span class="dv">3</span> &lt;-<span class="st"> </span>rs1_<span class="dv">5</span> <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">filter</span>(rs_cohort <span class="op">==</span><span class="st"> </span><span class="dv">2</span>)
-
-rs1_<span class="dv">5</span> &lt;-<span class="st"> </span>rs1_<span class="dv">5</span> <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">filter</span>(rs_cohort <span class="op">==</span><span class="st"> </span><span class="dv">1</span>)
-
-<span class="co">#3. rs1_6 into rs1 and rs2 </span>
-rs2_<span class="dv">4</span> &lt;-<span class="st"> </span>rs1_<span class="dv">6</span> <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">filter</span>(rs_cohort <span class="op">==</span><span class="st"> </span><span class="dv">2</span>)
-
-rs1_<span class="dv">6</span> &lt;-<span class="st"> </span>rs1_<span class="dv">6</span> <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">filter</span>(rs_cohort <span class="op">==</span><span class="st"> </span><span class="dv">1</span>)</code></pre>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" title="1"><span class="co">#1. Separate rs1_4 into rs1, rs2</span></a>
+<a class="sourceLine" id="cb15-2" title="2"></a>
+<a class="sourceLine" id="cb15-3" title="3">rs2_<span class="dv">2</span> &lt;-<span class="st"> </span>rs1_<span class="dv">4</span> <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb15-4" title="4"><span class="st">  </span><span class="kw">filter</span>(rs_cohort <span class="op">==</span><span class="st"> </span><span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb15-5" title="5"></a>
+<a class="sourceLine" id="cb15-6" title="6">rs1_<span class="dv">4</span> &lt;-<span class="st"> </span>rs1_<span class="dv">4</span> <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb15-7" title="7"><span class="st">  </span><span class="kw">filter</span>(rs_cohort <span class="op">==</span><span class="st"> </span><span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb15-8" title="8"></a>
+<a class="sourceLine" id="cb15-9" title="9"><span class="co">#2. Separate rs1_5 into rs1, rs2, rs3</span></a>
+<a class="sourceLine" id="cb15-10" title="10">rs3_<span class="dv">2</span> &lt;-<span class="st"> </span>rs1_<span class="dv">5</span> <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb15-11" title="11"><span class="st">  </span><span class="kw">filter</span>(rs_cohort <span class="op">==</span><span class="st"> </span><span class="dv">3</span>)</a>
+<a class="sourceLine" id="cb15-12" title="12"></a>
+<a class="sourceLine" id="cb15-13" title="13">rs2_<span class="dv">3</span> &lt;-<span class="st"> </span>rs1_<span class="dv">5</span> <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb15-14" title="14"><span class="st">  </span><span class="kw">filter</span>(rs_cohort <span class="op">==</span><span class="st"> </span><span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb15-15" title="15"></a>
+<a class="sourceLine" id="cb15-16" title="16">rs1_<span class="dv">5</span> &lt;-<span class="st"> </span>rs1_<span class="dv">5</span> <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb15-17" title="17"><span class="st">  </span><span class="kw">filter</span>(rs_cohort <span class="op">==</span><span class="st"> </span><span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb15-18" title="18"></a>
+<a class="sourceLine" id="cb15-19" title="19"><span class="co">#3. rs1_6 into rs1 and rs2 </span></a>
+<a class="sourceLine" id="cb15-20" title="20">rs2_<span class="dv">4</span> &lt;-<span class="st"> </span>rs1_<span class="dv">6</span> <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb15-21" title="21"><span class="st">  </span><span class="kw">filter</span>(rs_cohort <span class="op">==</span><span class="st"> </span><span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb15-22" title="22"></a>
+<a class="sourceLine" id="cb15-23" title="23">rs1_<span class="dv">6</span> &lt;-<span class="st"> </span>rs1_<span class="dv">6</span> <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb15-24" title="24"><span class="st">  </span><span class="kw">filter</span>(rs_cohort <span class="op">==</span><span class="st"> </span><span class="dv">1</span>)</a></code></pre></div>
 <ol start="3" style="list-style-type: decimal">
 <li>Merge the data for all visits, by cohort:</li>
 </ol>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="co">### Merge RSI</span>
-
-rs1 &lt;-<span class="st"> </span><span class="kw">list</span>(rs1_<span class="dv">1</span>, rs1_<span class="dv">2</span>, rs1_<span class="dv">3</span>, rs1_<span class="dv">4</span>, rs1_<span class="dv">5</span>, rs1_<span class="dv">6</span>)
-
-rs1_vis &lt;-<span class="st"> </span><span class="kw">reduce</span>(rs1, left_join, <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;ergoid&quot;</span>, <span class="st">&quot;rs_cohort&quot;</span>))
-
-<span class="co">### </span><span class="al">NOTE</span><span class="co">: RS1_2 had only 1 center visit and no home interview!</span>
-
-<span class="co">### Merge RS2</span>
-rs2 &lt;-<span class="st"> </span><span class="kw">list</span>(rs2_<span class="dv">1</span>, rs2_<span class="dv">2</span>, rs2_<span class="dv">3</span>, rs2_<span class="dv">4</span>)
-
-rs2_vis &lt;-<span class="st"> </span><span class="kw">reduce</span>(rs2, left_join, <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;ergoid&quot;</span>, <span class="st">&quot;rs_cohort&quot;</span>))
-
-<span class="co">### Merge RS3</span>
-
-rs3_vis &lt;-<span class="st"> </span>rs3_<span class="dv">1</span>  <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">left_join</span>(rs3_<span class="dv">2</span>, <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;ergoid&quot;</span>, <span class="st">&quot;rs_cohort&quot;</span>))</code></pre>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" title="1"><span class="co">### Merge RSI</span></a>
+<a class="sourceLine" id="cb16-2" title="2"></a>
+<a class="sourceLine" id="cb16-3" title="3">rs1 &lt;-<span class="st"> </span><span class="kw">list</span>(rs1_<span class="dv">1</span>, rs1_<span class="dv">2</span>, rs1_<span class="dv">3</span>, rs1_<span class="dv">4</span>, rs1_<span class="dv">5</span>, rs1_<span class="dv">6</span>)</a>
+<a class="sourceLine" id="cb16-4" title="4"></a>
+<a class="sourceLine" id="cb16-5" title="5">rs1_vis &lt;-<span class="st"> </span><span class="kw">reduce</span>(rs1, left_join, <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;ergoid&quot;</span>, <span class="st">&quot;rs_cohort&quot;</span>))</a>
+<a class="sourceLine" id="cb16-6" title="6"></a>
+<a class="sourceLine" id="cb16-7" title="7"><span class="co">### </span><span class="al">NOTE</span><span class="co">: RS1_2 had only 1 center visit and no home interview!</span></a>
+<a class="sourceLine" id="cb16-8" title="8"></a>
+<a class="sourceLine" id="cb16-9" title="9"><span class="co">### Merge RS2</span></a>
+<a class="sourceLine" id="cb16-10" title="10">rs2 &lt;-<span class="st"> </span><span class="kw">list</span>(rs2_<span class="dv">1</span>, rs2_<span class="dv">2</span>, rs2_<span class="dv">3</span>, rs2_<span class="dv">4</span>)</a>
+<a class="sourceLine" id="cb16-11" title="11"></a>
+<a class="sourceLine" id="cb16-12" title="12">rs2_vis &lt;-<span class="st"> </span><span class="kw">reduce</span>(rs2, left_join, <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;ergoid&quot;</span>, <span class="st">&quot;rs_cohort&quot;</span>))</a>
+<a class="sourceLine" id="cb16-13" title="13"></a>
+<a class="sourceLine" id="cb16-14" title="14"><span class="co">### Merge RS3</span></a>
+<a class="sourceLine" id="cb16-15" title="15"></a>
+<a class="sourceLine" id="cb16-16" title="16">rs3_vis &lt;-<span class="st"> </span>rs3_<span class="dv">1</span>  <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb16-17" title="17"><span class="st">  </span><span class="kw">left_join</span>(rs3_<span class="dv">2</span>, <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;ergoid&quot;</span>, <span class="st">&quot;rs_cohort&quot;</span>))</a></code></pre></div>
 <ol start="4" style="list-style-type: decimal">
 <li>Select and rename the specific variables from the combined dataset, by cohort: In this case we selected the variables for the interview date.</li>
 </ol>
-<pre class="sourceCode r"><code class="sourceCode r">rs1_interview &lt;-<span class="st"> </span>rs1_vis <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">select</span>(ergoid, rs_cohort, e1_aintdat, e2_bcendat, e3_<span class="dv">3493</span>, e4_<span class="dv">3493</span>, e5_<span class="dv">3493</span>, e6_<span class="dv">3493</span>) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">rename</span>(<span class="dt">e1 =</span> e1_aintdat, <span class="dt">e2 =</span> e2_bcendat, <span class="dt">e3 =</span> e3_<span class="dv">3493</span>, <span class="dt">e4 =</span> e4_<span class="dv">3493</span>, <span class="dt">e5 =</span> e5_<span class="dv">3493</span>, <span class="dt">e6 =</span> e6_<span class="dv">3493</span>)
-
-rs2_interview &lt;-<span class="st"> </span>rs2_vis <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">select</span>(ergoid, rs_cohort , ep_<span class="dv">3493</span>, e4_<span class="dv">3493</span>, e5_<span class="dv">3493</span>, e6_<span class="dv">3493</span>) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">rename</span>(<span class="dt">e3 =</span> ep_<span class="dv">3493</span>, <span class="dt">e4 =</span> e4_<span class="dv">3493</span>, <span class="dt">e5 =</span> e5_<span class="dv">3493</span>, <span class="dt">e6 =</span> e6_<span class="dv">3493</span>)
-  
-rs3_interview &lt;-<span class="st"> </span>rs3_vis <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">select</span>(ergoid, rs_cohort , ej_<span class="dv">3493</span>, e5_<span class="dv">3493</span>) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">rename</span>(<span class="dt">e4 =</span> ej_<span class="dv">3493</span>, <span class="dt">e5 =</span> e5_<span class="dv">3493</span>)</code></pre>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" title="1">rs1_interview &lt;-<span class="st"> </span>rs1_vis <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb17-2" title="2"><span class="st">  </span><span class="kw">select</span>(ergoid, rs_cohort, e1_aintdat, e2_bcendat, e3_<span class="dv">3493</span>, e4_<span class="dv">3493</span>, e5_<span class="dv">3493</span>, e6_<span class="dv">3493</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb17-3" title="3"><span class="st">  </span><span class="kw">rename</span>(<span class="dt">e1 =</span> e1_aintdat, <span class="dt">e2 =</span> e2_bcendat, <span class="dt">e3 =</span> e3_<span class="dv">3493</span>, <span class="dt">e4 =</span> e4_<span class="dv">3493</span>, <span class="dt">e5 =</span> e5_<span class="dv">3493</span>, <span class="dt">e6 =</span> e6_<span class="dv">3493</span>)</a>
+<a class="sourceLine" id="cb17-4" title="4"></a>
+<a class="sourceLine" id="cb17-5" title="5">rs2_interview &lt;-<span class="st"> </span>rs2_vis <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb17-6" title="6"><span class="st">  </span><span class="kw">select</span>(ergoid, rs_cohort , ep_<span class="dv">3493</span>, e4_<span class="dv">3493</span>, e5_<span class="dv">3493</span>, e6_<span class="dv">3493</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb17-7" title="7"><span class="st">  </span><span class="kw">rename</span>(<span class="dt">e3 =</span> ep_<span class="dv">3493</span>, <span class="dt">e4 =</span> e4_<span class="dv">3493</span>, <span class="dt">e5 =</span> e5_<span class="dv">3493</span>, <span class="dt">e6 =</span> e6_<span class="dv">3493</span>)</a>
+<a class="sourceLine" id="cb17-8" title="8">  </a>
+<a class="sourceLine" id="cb17-9" title="9">rs3_interview &lt;-<span class="st"> </span>rs3_vis <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb17-10" title="10"><span class="st">  </span><span class="kw">select</span>(ergoid, rs_cohort , ej_<span class="dv">3493</span>, e5_<span class="dv">3493</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb17-11" title="11"><span class="st">  </span><span class="kw">rename</span>(<span class="dt">e4 =</span> ej_<span class="dv">3493</span>, <span class="dt">e5 =</span> e5_<span class="dv">3493</span>)</a></code></pre></div>
 <ol start="5" style="list-style-type: decimal">
 <li>Bind, if necessary, the cohorts. Since the variable names are consistent through the datasets.</li>
 </ol>
-<pre class="sourceCode r"><code class="sourceCode r">visits &lt;-<span class="st"> </span>rs1_interview <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">bind_rows</span>(rs2_interview) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">bind_rows</span>(rs3_interview)</code></pre>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" title="1">visits &lt;-<span class="st"> </span>rs1_interview <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb18-2" title="2"><span class="st">  </span><span class="kw">bind_rows</span>(rs2_interview) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb18-3" title="3"><span class="st">  </span><span class="kw">bind_rows</span>(rs3_interview)</a></code></pre></div>
 <ol start="7" style="list-style-type: decimal">
 <li>Export the variable to a <code>clean_data</code> folder.</li>
 </ol>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">export</span>(visits, here<span class="op">::</span><span class="kw">here</span>(<span class="st">&quot;02_clean_data&quot;</span>, <span class="st">&quot;visits.Rdata&quot;</span>))</code></pre>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" title="1"><span class="kw">export</span>(visits, here<span class="op">::</span><span class="kw">here</span>(<span class="st">&quot;02_clean_data&quot;</span>, <span class="st">&quot;visits.Rdata&quot;</span>))</a></code></pre></div>
 
 </div>
             </section>
@@ -259,11 +265,13 @@ rs3_interview &lt;-<span class="st"> </span>rs3_vis <span class="op">%&gt;%</spa
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
 <script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
 <script>
 gitbook.require(["gitbook"], function(gitbook) {
 gitbook.start({

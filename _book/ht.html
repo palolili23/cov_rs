@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Chapter 11 Hypertension | Data cleaning guide for the Rotterdam Study</title>
   <meta name="description" content="This is a guide that contains basic scripts for cleaning the data from the Rotterdam Study. It is intended to guide students on their own data cleaning process for specific aims." />
-  <meta name="generator" content="bookdown 0.11 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.14 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Chapter 11 Hypertension | Data cleaning guide for the Rotterdam Study" />
   <meta property="og:type" content="book" />
@@ -24,15 +24,15 @@
 <meta name="author" content="Paloma Rojas Saunero, Eline Vinke" />
 
 
-<meta name="date" content="2019-07-30" />
+<meta name="date" content="2019-10-15" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="smoke-cig.html">
-<link rel="next" href="lab.html">
+<link rel="prev" href="smoke-cig.html"/>
+<link rel="next" href="lab.html"/>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -40,6 +40,9 @@
 <link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
 
 
 
@@ -55,7 +58,6 @@ a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
 a.sourceLine:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode { white-space: pre; position: relative; }
-div.sourceCode { margin: 1em 0; }
 pre.sourceCode { margin: 0; }
 @media screen {
 div.sourceCode { overflow: auto; }
@@ -126,11 +128,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       <nav role="navigation">
 
 <ul class="summary">
-<li><a href="./">A Minimal Book Example</a></li>
+<li><a href="./">RS Data cleaning guide </a></li>
 
 <li class="divider"></li>
-<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Prerequisites</a></li>
-<li class="chapter" data-level="2" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>2</b> Introduction</a></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> About</a></li>
+<li class="chapter" data-level="2" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>2</b> Introduction</a><ul>
+<li class="chapter" data-level="2.1" data-path="intro.html"><a href="intro.html#prerequisites"><i class="fa fa-check"></i><b>2.1</b> Prerequisites</a></li>
+<li class="chapter" data-level="2.2" data-path="intro.html"><a href="intro.html#rotterdam-study-data-structure"><i class="fa fa-check"></i><b>2.2</b> Rotterdam study data structure</a></li>
+<li class="chapter" data-level="2.3" data-path="intro.html"><a href="intro.html#overview-of-the-process-to-clean-a-variable"><i class="fa fa-check"></i><b>2.3</b> Overview of the process to clean a variable</a></li>
+</ul></li>
 <li class="chapter" data-level="3" data-path="basic.html"><a href="basic.html"><i class="fa fa-check"></i><b>3</b> ERGO Basics</a></li>
 <li class="chapter" data-level="4" data-path="vital.html"><a href="vital.html"><i class="fa fa-check"></i><b>4</b> ERGO Vital status</a></li>
 <li class="chapter" data-level="5" data-path="visit.html"><a href="visit.html"><i class="fa fa-check"></i><b>5</b> Visit dates</a></li>
@@ -167,92 +173,92 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ol style="list-style-type: decimal">
 <li>Import data for all cohorts</li>
 </ol>
-<pre class="sourceCode r"><code class="sourceCode r">ht &lt;-<span class="st"> </span><span class="kw">read_sav</span>(here<span class="op">::</span><span class="kw">here</span>(<span class="st">&quot;00_raw_data&quot;</span>, <span class="st">&quot;hypertension&quot;</span>, <span class="st">&quot;HT2018_analysisfile_(15-may-2018).sav&quot;</span>))</code></pre>
+<div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb49-1" title="1">ht &lt;-<span class="st"> </span><span class="kw">read_sav</span>(here<span class="op">::</span><span class="kw">here</span>(<span class="st">&quot;00_raw_data&quot;</span>, <span class="st">&quot;hypertension&quot;</span>, <span class="st">&quot;HT2018_analysisfile_(15-may-2018).sav&quot;</span>))</a></code></pre></div>
 <ol start="2" style="list-style-type: decimal">
 <li>Split datasets:</li>
 </ol>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># 1. Separate hypertension for RS-I, RS-II and RS-III</span>
-
-ht1 &lt;-<span class="st"> </span>ht <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">filter</span>(rs_cohort <span class="op">==</span><span class="st"> </span><span class="dv">1</span>)
-
-ht2 &lt;-<span class="st"> </span>ht <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">filter</span>(rs_cohort <span class="op">==</span><span class="st"> </span><span class="dv">2</span>)
-
-ht3 &lt;-<span class="st"> </span>ht <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">filter</span>(rs_cohort <span class="op">==</span><span class="st"> </span><span class="dv">3</span>)</code></pre>
+<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb50-1" title="1"><span class="co"># 1. Separate hypertension for RS-I, RS-II and RS-III</span></a>
+<a class="sourceLine" id="cb50-2" title="2"></a>
+<a class="sourceLine" id="cb50-3" title="3">ht1 &lt;-<span class="st"> </span>ht <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb50-4" title="4"><span class="st">  </span><span class="kw">filter</span>(rs_cohort <span class="op">==</span><span class="st"> </span><span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb50-5" title="5"></a>
+<a class="sourceLine" id="cb50-6" title="6">ht2 &lt;-<span class="st"> </span>ht <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb50-7" title="7"><span class="st">  </span><span class="kw">filter</span>(rs_cohort <span class="op">==</span><span class="st"> </span><span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb50-8" title="8"></a>
+<a class="sourceLine" id="cb50-9" title="9">ht3 &lt;-<span class="st"> </span>ht <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb50-10" title="10"><span class="st">  </span><span class="kw">filter</span>(rs_cohort <span class="op">==</span><span class="st"> </span><span class="dv">3</span>)</a></code></pre></div>
 <ol start="3" style="list-style-type: decimal">
 <li>Select and rename variables:</li>
 </ol>
-<pre class="sourceCode r"><code class="sourceCode r">ht1 &lt;-<span class="st"> </span>ht <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">select</span>(ergoid, <span class="kw">contains</span>(<span class="st">&quot;systolicBP&quot;</span>), <span class="kw">contains</span>(<span class="st">&quot;diastolicBP&quot;</span>), <span class="kw">contains</span>(<span class="st">&quot;HT2018&quot;</span>), <span class="kw">contains</span>(<span class="st">&quot;bpldrug&quot;</span>)) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">rename</span>(
-    <span class="dt">sbp1 =</span> e1_systolicBP,
-    <span class="dt">sbp2 =</span> e2_systolicBP,
-    <span class="dt">sbp3 =</span> e3_systolicBP,
-    <span class="dt">sbp4 =</span> e4_systolicBP,
-    <span class="dt">sbp5 =</span> e5_systolicBP,
-    <span class="dt">sbp6 =</span> e6_systolicBP,
-    <span class="dt">dbp1 =</span> e1_diastolicBP,
-    <span class="dt">dbp2 =</span> e2_diastolicBP,
-    <span class="dt">dbp3 =</span> e3_diastolicBP,
-    <span class="dt">dbp4 =</span> e4_diastolicBP,
-    <span class="dt">dbp5 =</span> e5_diastolicBP,
-    <span class="dt">dbp6 =</span> e6_diastolicBP,
-    <span class="dt">ht1 =</span> e1_HT2018,
-    <span class="dt">ht2 =</span> e2_HT2018,
-    <span class="dt">ht3 =</span> e3_HT2018,
-    <span class="dt">ht4 =</span> e4_HT2018,
-    <span class="dt">ht5 =</span> e5_HT2018,
-    <span class="dt">ht6 =</span> e6_HT2018,
-    <span class="dt">htdrug1 =</span> e1_bpldrug,
-    <span class="dt">htdrug2 =</span> e2_bpldrug,
-    <span class="dt">htdrug3 =</span> e3_bpldrug,
-    <span class="dt">htdrug4 =</span> e4_bpldrug,
-    <span class="dt">htdrug5 =</span> e5_bpldrug,
-    <span class="dt">htdrug6 =</span> e6_bpldrug
-    )
-
-
-ht2 &lt;-<span class="st"> </span>ht <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">select</span>(ergoid, <span class="kw">contains</span>(<span class="st">&quot;systolicBP&quot;</span>), <span class="kw">contains</span>(<span class="st">&quot;diastolicBP&quot;</span>), <span class="kw">contains</span>(<span class="st">&quot;HT2018&quot;</span>), <span class="kw">contains</span>(<span class="st">&quot;bpldrug&quot;</span>)) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">rename</span>(
-    <span class="dt">sbp3 =</span> ep_systolicBP,
-    <span class="dt">sbp4 =</span> e4_systolicBP,
-    <span class="dt">sbp5 =</span> e5_systolicBP,
-    <span class="dt">sbp6 =</span> e6_systolicBP,
-    <span class="dt">dbp3 =</span> ep_diastolicBP,
-    <span class="dt">dbp4 =</span> e4_diastolicBP,
-    <span class="dt">dbp5 =</span> e5_diastolicBP,
-    <span class="dt">dbp6 =</span> e6_diastolicBP,
-    <span class="dt">ht3 =</span> ep_HT2018,
-    <span class="dt">ht4 =</span> e4_HT2018,
-    <span class="dt">ht5 =</span> e5_HT2018,
-    <span class="dt">ht6 =</span> e6_HT2018,
-    <span class="dt">htdrug3 =</span> ep_bpldrug,
-    <span class="dt">htdrug4 =</span> e4_bpldrug,
-    <span class="dt">htdrug5 =</span> e5_bpldrug,
-    <span class="dt">htdrug6 =</span> e6_bpldrug
-    )
-
-ht3 &lt;-<span class="st"> </span>ht <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">filter</span>(rs_cohort <span class="op">==</span><span class="st"> </span><span class="dv">3</span>) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">select</span>(ergoid, <span class="kw">contains</span>(<span class="st">&quot;systolicBP&quot;</span>), <span class="kw">contains</span>(<span class="st">&quot;HT2018&quot;</span>)) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">rename</span>(
-    <span class="dt">sbp4 =</span> ej_systolicBP,
-    <span class="dt">sbp5 =</span> e5_systolicBP,
-    <span class="dt">ht4 =</span> ej_HT2018,
-    <span class="dt">ht5 =</span> e5_HT2018)</code></pre>
+<div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb51-1" title="1">ht1 &lt;-<span class="st"> </span>ht <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb51-2" title="2"><span class="st">  </span><span class="kw">select</span>(ergoid, <span class="kw">contains</span>(<span class="st">&quot;systolicBP&quot;</span>), <span class="kw">contains</span>(<span class="st">&quot;diastolicBP&quot;</span>), <span class="kw">contains</span>(<span class="st">&quot;HT2018&quot;</span>), <span class="kw">contains</span>(<span class="st">&quot;bpldrug&quot;</span>)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb51-3" title="3"><span class="st">  </span><span class="kw">rename</span>(</a>
+<a class="sourceLine" id="cb51-4" title="4">    <span class="dt">sbp1 =</span> e1_systolicBP,</a>
+<a class="sourceLine" id="cb51-5" title="5">    <span class="dt">sbp2 =</span> e2_systolicBP,</a>
+<a class="sourceLine" id="cb51-6" title="6">    <span class="dt">sbp3 =</span> e3_systolicBP,</a>
+<a class="sourceLine" id="cb51-7" title="7">    <span class="dt">sbp4 =</span> e4_systolicBP,</a>
+<a class="sourceLine" id="cb51-8" title="8">    <span class="dt">sbp5 =</span> e5_systolicBP,</a>
+<a class="sourceLine" id="cb51-9" title="9">    <span class="dt">sbp6 =</span> e6_systolicBP,</a>
+<a class="sourceLine" id="cb51-10" title="10">    <span class="dt">dbp1 =</span> e1_diastolicBP,</a>
+<a class="sourceLine" id="cb51-11" title="11">    <span class="dt">dbp2 =</span> e2_diastolicBP,</a>
+<a class="sourceLine" id="cb51-12" title="12">    <span class="dt">dbp3 =</span> e3_diastolicBP,</a>
+<a class="sourceLine" id="cb51-13" title="13">    <span class="dt">dbp4 =</span> e4_diastolicBP,</a>
+<a class="sourceLine" id="cb51-14" title="14">    <span class="dt">dbp5 =</span> e5_diastolicBP,</a>
+<a class="sourceLine" id="cb51-15" title="15">    <span class="dt">dbp6 =</span> e6_diastolicBP,</a>
+<a class="sourceLine" id="cb51-16" title="16">    <span class="dt">ht1 =</span> e1_HT2018,</a>
+<a class="sourceLine" id="cb51-17" title="17">    <span class="dt">ht2 =</span> e2_HT2018,</a>
+<a class="sourceLine" id="cb51-18" title="18">    <span class="dt">ht3 =</span> e3_HT2018,</a>
+<a class="sourceLine" id="cb51-19" title="19">    <span class="dt">ht4 =</span> e4_HT2018,</a>
+<a class="sourceLine" id="cb51-20" title="20">    <span class="dt">ht5 =</span> e5_HT2018,</a>
+<a class="sourceLine" id="cb51-21" title="21">    <span class="dt">ht6 =</span> e6_HT2018,</a>
+<a class="sourceLine" id="cb51-22" title="22">    <span class="dt">htdrug1 =</span> e1_bpldrug,</a>
+<a class="sourceLine" id="cb51-23" title="23">    <span class="dt">htdrug2 =</span> e2_bpldrug,</a>
+<a class="sourceLine" id="cb51-24" title="24">    <span class="dt">htdrug3 =</span> e3_bpldrug,</a>
+<a class="sourceLine" id="cb51-25" title="25">    <span class="dt">htdrug4 =</span> e4_bpldrug,</a>
+<a class="sourceLine" id="cb51-26" title="26">    <span class="dt">htdrug5 =</span> e5_bpldrug,</a>
+<a class="sourceLine" id="cb51-27" title="27">    <span class="dt">htdrug6 =</span> e6_bpldrug</a>
+<a class="sourceLine" id="cb51-28" title="28">    )</a>
+<a class="sourceLine" id="cb51-29" title="29"></a>
+<a class="sourceLine" id="cb51-30" title="30"></a>
+<a class="sourceLine" id="cb51-31" title="31">ht2 &lt;-<span class="st"> </span>ht <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb51-32" title="32"><span class="st">  </span><span class="kw">select</span>(ergoid, <span class="kw">contains</span>(<span class="st">&quot;systolicBP&quot;</span>), <span class="kw">contains</span>(<span class="st">&quot;diastolicBP&quot;</span>), <span class="kw">contains</span>(<span class="st">&quot;HT2018&quot;</span>), <span class="kw">contains</span>(<span class="st">&quot;bpldrug&quot;</span>)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb51-33" title="33"><span class="st">  </span><span class="kw">rename</span>(</a>
+<a class="sourceLine" id="cb51-34" title="34">    <span class="dt">sbp3 =</span> ep_systolicBP,</a>
+<a class="sourceLine" id="cb51-35" title="35">    <span class="dt">sbp4 =</span> e4_systolicBP,</a>
+<a class="sourceLine" id="cb51-36" title="36">    <span class="dt">sbp5 =</span> e5_systolicBP,</a>
+<a class="sourceLine" id="cb51-37" title="37">    <span class="dt">sbp6 =</span> e6_systolicBP,</a>
+<a class="sourceLine" id="cb51-38" title="38">    <span class="dt">dbp3 =</span> ep_diastolicBP,</a>
+<a class="sourceLine" id="cb51-39" title="39">    <span class="dt">dbp4 =</span> e4_diastolicBP,</a>
+<a class="sourceLine" id="cb51-40" title="40">    <span class="dt">dbp5 =</span> e5_diastolicBP,</a>
+<a class="sourceLine" id="cb51-41" title="41">    <span class="dt">dbp6 =</span> e6_diastolicBP,</a>
+<a class="sourceLine" id="cb51-42" title="42">    <span class="dt">ht3 =</span> ep_HT2018,</a>
+<a class="sourceLine" id="cb51-43" title="43">    <span class="dt">ht4 =</span> e4_HT2018,</a>
+<a class="sourceLine" id="cb51-44" title="44">    <span class="dt">ht5 =</span> e5_HT2018,</a>
+<a class="sourceLine" id="cb51-45" title="45">    <span class="dt">ht6 =</span> e6_HT2018,</a>
+<a class="sourceLine" id="cb51-46" title="46">    <span class="dt">htdrug3 =</span> ep_bpldrug,</a>
+<a class="sourceLine" id="cb51-47" title="47">    <span class="dt">htdrug4 =</span> e4_bpldrug,</a>
+<a class="sourceLine" id="cb51-48" title="48">    <span class="dt">htdrug5 =</span> e5_bpldrug,</a>
+<a class="sourceLine" id="cb51-49" title="49">    <span class="dt">htdrug6 =</span> e6_bpldrug</a>
+<a class="sourceLine" id="cb51-50" title="50">    )</a>
+<a class="sourceLine" id="cb51-51" title="51"></a>
+<a class="sourceLine" id="cb51-52" title="52">ht3 &lt;-<span class="st"> </span>ht <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb51-53" title="53"><span class="st">  </span><span class="kw">filter</span>(rs_cohort <span class="op">==</span><span class="st"> </span><span class="dv">3</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb51-54" title="54"><span class="st">  </span><span class="kw">select</span>(ergoid, <span class="kw">contains</span>(<span class="st">&quot;systolicBP&quot;</span>), <span class="kw">contains</span>(<span class="st">&quot;HT2018&quot;</span>)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb51-55" title="55"><span class="st">  </span><span class="kw">rename</span>(</a>
+<a class="sourceLine" id="cb51-56" title="56">    <span class="dt">sbp4 =</span> ej_systolicBP,</a>
+<a class="sourceLine" id="cb51-57" title="57">    <span class="dt">sbp5 =</span> e5_systolicBP,</a>
+<a class="sourceLine" id="cb51-58" title="58">    <span class="dt">ht4 =</span> ej_HT2018,</a>
+<a class="sourceLine" id="cb51-59" title="59">    <span class="dt">ht5 =</span> e5_HT2018)</a></code></pre></div>
 <ol start="6" style="list-style-type: decimal">
 <li>Bind , the cohorts. Since the variable names are consistent through the datasets.</li>
 </ol>
-<pre class="sourceCode r"><code class="sourceCode r">smoke_cig &lt;-<span class="st"> </span>rs1_cig <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">bind_rows</span>(rs2_cig) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">bind_rows</span>(rs3_cig)</code></pre>
+<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb52-1" title="1">smoke_cig &lt;-<span class="st"> </span>rs1_cig <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb52-2" title="2"><span class="st">  </span><span class="kw">bind_rows</span>(rs2_cig) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb52-3" title="3"><span class="st">  </span><span class="kw">bind_rows</span>(rs3_cig)</a></code></pre></div>
 <ol start="7" style="list-style-type: decimal">
 <li>Export the variable to a <code>clean_data</code> folder.</li>
 </ol>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">export</span>(smoke_cig, here<span class="op">::</span><span class="kw">here</span>(<span class="st">&quot;02_clean_data&quot;</span>, <span class="st">&quot;smoke_cig.Rdata&quot;</span>))</code></pre>
+<div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb53-1" title="1"><span class="kw">export</span>(smoke_cig, here<span class="op">::</span><span class="kw">here</span>(<span class="st">&quot;02_clean_data&quot;</span>, <span class="st">&quot;smoke_cig.Rdata&quot;</span>))</a></code></pre></div>
 
 </div>
             </section>
@@ -266,11 +272,13 @@ ht3 &lt;-<span class="st"> </span>ht <span class="op">%&gt;%</span><span class="
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
 <script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
 <script>
 gitbook.require(["gitbook"], function(gitbook) {
 gitbook.start({

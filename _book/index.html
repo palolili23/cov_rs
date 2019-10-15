@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Data cleaning guide for the Rotterdam Study</title>
   <meta name="description" content="This is a guide that contains basic scripts for cleaning the data from the Rotterdam Study. It is intended to guide students on their own data cleaning process for specific aims." />
-  <meta name="generator" content="bookdown 0.11 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.14 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Data cleaning guide for the Rotterdam Study" />
   <meta property="og:type" content="book" />
@@ -24,7 +24,7 @@
 <meta name="author" content="Paloma Rojas Saunero, Eline Vinke" />
 
 
-<meta name="date" content="2019-07-30" />
+<meta name="date" content="2019-10-15" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -32,7 +32,7 @@
   
   
 
-<link rel="next" href="intro.html">
+<link rel="next" href="intro.html"/>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -40,6 +40,9 @@
 <link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
 
 
 
@@ -55,7 +58,6 @@ a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
 a.sourceLine:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode { white-space: pre; position: relative; }
-div.sourceCode { margin: 1em 0; }
 pre.sourceCode { margin: 0; }
 @media screen {
 div.sourceCode { overflow: auto; }
@@ -126,11 +128,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       <nav role="navigation">
 
 <ul class="summary">
-<li><a href="./">A Minimal Book Example</a></li>
+<li><a href="./">RS Data cleaning guide </a></li>
 
 <li class="divider"></li>
-<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Prerequisites</a></li>
-<li class="chapter" data-level="2" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>2</b> Introduction</a></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> About</a></li>
+<li class="chapter" data-level="2" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>2</b> Introduction</a><ul>
+<li class="chapter" data-level="2.1" data-path="intro.html"><a href="intro.html#prerequisites"><i class="fa fa-check"></i><b>2.1</b> Prerequisites</a></li>
+<li class="chapter" data-level="2.2" data-path="intro.html"><a href="intro.html#rotterdam-study-data-structure"><i class="fa fa-check"></i><b>2.2</b> Rotterdam study data structure</a></li>
+<li class="chapter" data-level="2.3" data-path="intro.html"><a href="intro.html#overview-of-the-process-to-clean-a-variable"><i class="fa fa-check"></i><b>2.3</b> Overview of the process to clean a variable</a></li>
+</ul></li>
 <li class="chapter" data-level="3" data-path="basic.html"><a href="basic.html"><i class="fa fa-check"></i><b>3</b> ERGO Basics</a></li>
 <li class="chapter" data-level="4" data-path="vital.html"><a href="vital.html"><i class="fa fa-check"></i><b>4</b> ERGO Vital status</a></li>
 <li class="chapter" data-level="5" data-path="visit.html"><a href="visit.html"><i class="fa fa-check"></i><b>5</b> Visit dates</a></li>
@@ -164,16 +170,17 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="header">
 <h1 class="title">Data cleaning guide for the Rotterdam Study</h1>
 <p class="author"><em>Paloma Rojas Saunero, Eline Vinke</em></p>
-<p class="date"><em>2019-07-30</em></p>
+<p class="date"><em>2019-10-15</em></p>
 </div>
-<div id="prerequisites" class="section level1">
-<h1><span class="header-section-number">Chapter 1</span> Prerequisites</h1>
-<ul>
-<li><p>Install R and Rstudio IDE</p></li>
-<li><p>Install and open the following packages:</p></li>
-<li><p>Create an R project with a folder for your raw data (We will name this folder <code>00_raw_data</code>)</p></li>
-<li><p>Data can be accessed from the following: <a href="https://epi-wiki.erasmusmc.nl/wiki/ergowiki/index.php/Ergobasics">link</a></p></li>
-</ul>
+<div id="about" class="section level1">
+<h1><span class="header-section-number">Chapter 1</span> About</h1>
+<p>Data cleaning (wrangling) will be the first to face after obtaining the raw data for your research.</p>
+<p>To facilitate this process, we want to provide a guide that describes how to approach the raw data from the Rotterdam study and provides the corresponding code to approach each variable. The intention is that all students becoming familiar with the data and develop the essencial skills for a reproducible data cleaning.</p>
+<p>We will use the <strong>tidyverse</strong> language and ecosystem. If you are not familiar with the tidyverse and the pipe operator <strong>%&gt;%</strong> you will want to read <a href="https://r4ds.had.co.nz/pipes.html">this book</a>. This book contains a description of the essencial tidyverse tools.</p>
+<p><strong>Note:</strong> If you find any bug, typo, have suggestions, questions or you want to include a chapter in this guide please get in contact with us! We want to make this as collaborative as possible.</p>
+<p>Paloma: <a href="mailto:l.rojassaunero@erasmusmc.nl" class="email">l.rojassaunero@erasmusmc.nl</a></p>
+<p>Eline: <a href="mailto:e.vinke@erasmusmc.nl" class="email">e.vinke@erasmusmc.nl</a></p>
+<p>Github repository: <a href="https://github.com/palolili23/cov_rs" class="uri">https://github.com/palolili23/cov_rs</a></p>
 
 </div>
             </section>
@@ -187,11 +194,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
 <script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
 <script>
 gitbook.require(["gitbook"], function(gitbook) {
 gitbook.start({
