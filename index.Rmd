@@ -4,25 +4,24 @@ author: "Paloma Rojas Saunero, Eline Vinke"
 date: "`r Sys.Date()`"
 site: bookdown::bookdown_site
 documentclass: book
-bibliography: [book.bib, packages.bib]
-biblio-style: apalike
 link-citations: yes
 description: "This is a guide that contains basic scripts for cleaning the data from the Rotterdam Study. It is intended to guide students on their own data cleaning process for specific aims."
 ---
 
-# Prerequisites
+# About
 
-```{r include=FALSE}
-# automatically create a bib database for R packages
-knitr::write_bib(c(
-  .packages(), 'bookdown', 'knitr', 'rmarkdown'
-), 'packages.bib')
-```
-- Install R and Rstudio IDE
+Data cleaning (wrangling) will be the first to face after obtaining the raw data for your research. 
 
-- Install and open the following packages:
+To facilitate this process, we want to provide a guide that describes how to approach the raw data from the Rotterdam study and provides the corresponding code to approach each variable. The intention is that all students becoming familiar with the data and develop the essencial skills for a reproducible data cleaning.
 
-- Create an R project with a folder for your raw data (We will name this folder `00_raw_data`)
+We will use the **tidyverse** language and ecosystem. If you are not familiar with the tidyverse and the pipe operator **%>%** you will want to read [this book](https://r4ds.had.co.nz/pipes.html). This book contains a description of the essencial tidyverse tools.  
 
-- Data can be accessed from the following:  [link](https://epi-wiki.erasmusmc.nl/wiki/ergowiki/index.php/Ergobasics)
+**Note:** If you find any bug, typo, have suggestions, questions or you want to include a chapter in this guide please get in contact with us! We want to make this as collaborative as possible. 
 
+
+
+Paloma: l.rojassaunero@erasmusmc.nl
+
+Eline: e.vinke@erasmusmc.nl
+
+Github repository: https://github.com/palolili23/cov_rs
